@@ -70,7 +70,16 @@ export const JoinContainer = () => {
             name="username"
             required
             width={"100%"}
-            info={"https://cyfeed.io/u/$user"}
+            info={
+              <Box direction="row">
+                <Text size="xsmall" color={"text-weak"}>
+                  https://cyfeed.io/u/
+                </Text>
+                <Text size="xsmall" color={"brand"}>
+                  {value.username || "$user"}
+                </Text>
+              </Box>
+            }
           >
             <TextInput size="small" name="username" />
           </FormField>
