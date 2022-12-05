@@ -1,3 +1,4 @@
+import authReducer from "./features/Login/authSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import { cyfeedApi } from "./api/cyfeedApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
@@ -5,6 +6,7 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 export const store = configureStore({
   reducer: {
     [cyfeedApi.reducerPath]: cyfeedApi.reducer,
+    auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(cyfeedApi.middleware),

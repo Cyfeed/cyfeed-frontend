@@ -8,6 +8,7 @@ export const HACKED_DARK_GREY = "#1C1E23";
 export const HACKED_WHITE = "#E1E1E1;";
 export const HACKED_DARK_WHITE = "#B0B8C1";
 export const COLOR_TEXT_XWEAK = "#B9BFC6;";
+export const HACKED_RED = "#EB4B4C";
 
 export const UNIT_1 = "4px";
 export const UNIT_2 = "8px";
@@ -21,6 +22,11 @@ export const UNIT_9 = "48px";
 
 export const theme: ThemeType = {
   global: {
+    breakpoints: {
+      xsmall: {
+        value: 425,
+      },
+    },
     font: {
       family: "IBM Plex Mono",
     },
@@ -83,6 +89,7 @@ export const theme: ThemeType = {
       white: HACKED_WHITE,
       "accent-1": HACKED_GREEN,
       "accent-2": HACKED_BLUE,
+      "status-error": HACKED_RED,
     },
     control: {
       border: {
@@ -90,7 +97,13 @@ export const theme: ThemeType = {
       },
     },
   },
-  button: { size: { large: { border: { radius: UNIT_2 } } } },
+  button: {
+    size: {
+      large: { border: { radius: UNIT_2 } },
+      medium: { border: { radius: UNIT_2 } },
+      small: { border: { radius: UNIT_2 } },
+    },
+  },
   formField: {
     border: { side: "all", color: HACKED_DARK_GREY },
     round: UNIT_1,
@@ -105,11 +118,15 @@ export const theme: ThemeType = {
     },
     // @ts-ignore хз почему размер не типизирован, он точно есть
     info: { color: "text-weak", margin: { start: "none" }, size: "xsmall" },
+    // @ts-ignore то же самое
+    error: { color: "status-error", margin: { start: "none" }, size: "xsmall" },
   },
   textInput: {
+    // @ts-ignore то же самое
     extend: { "background-color": HACKED_DARK_GREY, color: HACKED_DARK_WHITE },
   },
   textArea: {
+    // @ts-ignore то же самое
     extend: { "background-color": HACKED_DARK_GREY, color: HACKED_DARK_WHITE },
   },
 };

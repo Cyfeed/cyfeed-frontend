@@ -27,8 +27,7 @@ const DEFAULT_VALUE = {
 
 export const JoinContainer = () => {
   const [value, setValue] = useState(DEFAULT_VALUE);
-  const [createUser, { data, error, status }] = useCreateUserMutation();
-  console.log("🚀 --- data, error, status", data, error, status);
+  const [createUser, { status }] = useCreateUserMutation();
 
   const handleSubmit = useCallback(
     (userData: ICreateUserRequest) => {
@@ -42,7 +41,6 @@ export const JoinContainer = () => {
       <Form
         value={value}
         onChange={(nextValue, { touched }) => {
-          console.log("Change", nextValue, touched);
           setValue(nextValue);
         }}
         onReset={() => setValue(DEFAULT_VALUE)}
