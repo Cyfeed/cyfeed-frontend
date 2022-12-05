@@ -1,48 +1,86 @@
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import {
+  resetCredentials,
   selectAccessToken,
   selectCurrentUser,
+  selectRefreshToken,
   setCredentials,
   setUser,
 } from "../../features/Login/authSlice";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-import { useEffect } from "react";
-import { useMeQuery } from "../../api/cyfeedApi";
+import { useLazyMeQuery, useRefreshTokenMutation } from "../../api/cyfeedApi";
 
 export function PrivateOutlet() {
-  const user = useSelector(selectCurrentUser);
-  const token = useSelector(selectAccessToken);
   const dispatch = useDispatch();
+  const location = useLocation();
 
-  const { data, error, isFetching } = useMeQuery(undefined, {
-    skip: !token || Boolean(user),
-  });
+  const user = useSelector(selectCurrentUser);
+  const accessToken = useSelector(selectAccessToken);
+  const refreshToken = useSelector(selectRefreshToken);
+
+  const [getMe, { isFetching: userIsFetching, isError: isGetMeError }] =
+    useLazyMeQuery();
+  const [
+    refresh,
+    { isLoading: tokenIsFetching, isError: isRefreshTokenError },
+  ] = useRefreshTokenMutation();
+
+  const refreshOnTokenExpire = useCallback(
+    async (token: string) => {
+      const newCredentials = await refresh(token).unwrap();
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem(ACCESS_TOKEN, newCredentials.accessToken);
+        localStorage.setItem(REFRESH_TOKEN, newCredentials.refreshToken);
+      }
+
+      dispatch(
+        setCredentials({
+          accessToken: newCredentials.accessToken,
+          refreshToken: newCredentials.refreshToken,
+        })
+      );
+    },
+    [dispatch, refresh]
+  );
+
+  const getUser = useCallback(async () => {
+    const me = await getMe().unwrap();
+    dispatch(setUser({ user: me }));
+  }, [dispatch, getMe]);
 
   useEffect(() => {
-    if (data) {
-      dispatch(setUser({ user: data }));
+    if (!user && accessToken) {
+      getUser();
     }
+  }, [accessToken, getUser, user]);
 
-    if (error) {
+  useEffect(() => {
+    if (isGetMeError && refreshToken) {
+      refreshOnTokenExpire(refreshToken);
+    }
+  }, [isGetMeError, refreshOnTokenExpire, refreshToken]);
+
+  useEffect(() => {
+    if (isRefreshTokenError) {
       localStorage.clear();
-      dispatch(setCredentials({ accessToken: null }));
+      dispatch(resetCredentials());
     }
-  }, [data, dispatch, error, token, user]);
-
-  const location = useLocation();
+  }, [dispatch, isRefreshTokenError]);
 
   if (user) {
     return <Outlet />;
   }
 
-  if (isFetching) {
+  if (userIsFetching || tokenIsFetching) {
     return <div>LOADING</div>;
   }
 
-  if (error || !token) {
+  if (!user && !accessToken && !refreshToken) {
     return <Navigate to="/login" state={{ from: location }} />;
   }
 
-  return <Outlet />;
+  return null;
 }

@@ -12,14 +12,15 @@ export const cyfeedApi = createApi({
   reducerPath: "cyfeedApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://api.cyfeed.co/api/",
-    prepareHeaders: (headers, { getState }) => {
+    prepareHeaders: (headers, { getState, endpoint }) => {
       const token = (getState() as RootState).auth.accessToken;
-      if (token) {
+      if (token && endpoint !== "refreshToken") {
         headers.set("authorization", `Bearer ${token}`);
       }
       return headers;
     },
   }),
+
   endpoints: (builder) => ({
     /**
      * AUTH
@@ -43,6 +44,15 @@ export const cyfeedApi = createApi({
         url: "/auth/users/login",
         method: "POST",
         body: loginData,
+      }),
+    }),
+    refreshToken: builder.mutation<ILoginResponse, string>({
+      query: (refreshToken) => ({
+        url: "/auth/token/refresh",
+        method: "POST",
+        headers: {
+          authorization: `Bearer ${refreshToken}`,
+        },
       }),
     }),
     me: builder.query<IGetUserByIdResponse, void>({
@@ -82,4 +92,5 @@ export const {
   useLazyMeQuery,
   useMeQuery,
   useCreatePostMutation,
+  useRefreshTokenMutation,
 } = cyfeedApi;

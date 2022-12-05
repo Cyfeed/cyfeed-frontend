@@ -1,27 +1,30 @@
 import { ACCESS_TOKEN } from "../../constants";
 import { IGetUserByIdResponse } from "./../../api/types/getUserById";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { REFRESH_TOKEN } from "./../../constants";
 import { RootState } from "../../store";
 import { createSlice } from "@reduxjs/toolkit";
 
-const getAccessToken = () => {
+const getToken = (type: string) => {
   if (typeof window === "undefined") {
     return;
   }
 
-  const accessToken = window.localStorage.getItem(ACCESS_TOKEN);
+  const accessToken = window.localStorage.getItem(type);
 
   return accessToken ? JSON.parse(accessToken) : accessToken;
 };
 
 const initialState = {
   user: null,
-  accessToken: getAccessToken() ?? null,
+  accessToken: getToken(ACCESS_TOKEN) ?? null,
+  refreshToken: getToken(REFRESH_TOKEN) ?? null,
 };
 
 export interface IAuthState {
   user: IGetUserByIdResponse | null;
   accessToken: string | null;
+  refreshToken: string | null;
 }
 
 const slice = createSlice({
@@ -31,10 +34,18 @@ const slice = createSlice({
     setCredentials: (
       state,
       {
-        payload: { accessToken },
-      }: PayloadAction<{ accessToken: string | null }>
+        payload: { accessToken, refreshToken },
+      }: PayloadAction<{
+        accessToken: string;
+        refreshToken: string;
+      }>
     ) => {
-      state.accessToken = accessToken;
+      state.accessToken = accessToken ?? null;
+      state.refreshToken = refreshToken;
+    },
+    resetCredentials: (state) => {
+      state.accessToken = null;
+      state.refreshToken = null;
     },
 
     setUser: (
@@ -46,9 +57,10 @@ const slice = createSlice({
   },
 });
 
-export const { setCredentials, setUser } = slice.actions;
+export const { setCredentials, resetCredentials, setUser } = slice.actions;
 
 export default slice.reducer;
 
 export const selectCurrentUser = (state: RootState) => state.auth.user;
 export const selectAccessToken = (state: RootState) => state.auth.accessToken;
+export const selectRefreshToken = (state: RootState) => state.auth.refreshToken;

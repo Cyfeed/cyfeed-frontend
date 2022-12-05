@@ -1,4 +1,9 @@
-import { ACCESS_TOKEN, LOGIN_EMAIL, LOGIN_TOKEN } from "../../constants";
+import {
+  ACCESS_TOKEN,
+  LOGIN_EMAIL,
+  LOGIN_TOKEN,
+  REFRESH_TOKEN,
+} from "../../constants";
 import { Box, FormField, TextInput } from "grommet";
 import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -35,6 +40,7 @@ export const LoginContainer = () => {
   const [loginToken, setLoginToken] = useLocalStorage(LOGIN_TOKEN, "");
   const [email, setEmail] = useLocalStorage(LOGIN_EMAIL, "");
   const [, setAccessToken] = useLocalStorage(ACCESS_TOKEN, "");
+  const [, setRefreshToken] = useLocalStorage(REFRESH_TOKEN, "");
 
   const emailErrorMessage =
     // @ts-expect-error TODO: типизировать ошибки
@@ -67,21 +73,31 @@ export const LoginContainer = () => {
 
   const handleSendCode = useCallback(async () => {
     if (loginToken && email) {
-      const { accessToken } = await login({
+      const { accessToken, refreshToken } = await login({
         authCode: code,
         email,
         loginToken,
       }).unwrap();
-
-      setAccessToken(accessToken);
-      dispatch(setCredentials({ accessToken }));
       localStorage.removeItem(LOGIN_TOKEN);
       localStorage.removeItem(LOGIN_EMAIL);
+
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+      dispatch(setCredentials({ accessToken, refreshToken }));
 
       const userData = await me().unwrap();
       dispatch(setUser({ user: userData }));
     }
-  }, [code, dispatch, email, login, loginToken, me, setAccessToken]);
+  }, [
+    code,
+    dispatch,
+    email,
+    login,
+    loginToken,
+    me,
+    setAccessToken,
+    setRefreshToken,
+  ]);
 
   useEffect(() => {
     if (currentUser) {
