@@ -19,12 +19,18 @@ const reactionsMock = [
 
 export const FeedItem = ({ post }: IFeedItemProps) => {
   const { title, publishedAt, author } = post;
+  const displayDate = new Date(publishedAt).toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
   return (
     <Box pad="medium" gap="small">
       <Text size="small">{title}</Text>
       <Box direction="row" gap="medium">
         <Text size="xsmall" color="text-xweak">
-          {publishedAt}
+          {displayDate}
         </Text>
         <Text size="xsmall" color="text-xweak">
           {author}

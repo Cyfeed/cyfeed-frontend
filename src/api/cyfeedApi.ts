@@ -1,6 +1,7 @@
+import { ICreatePostRequest, ICreatePostResponse } from "./types/createPost";
 import { ICreateUserRequest, ICreateUserResponse } from "./types/createUser";
 import { IGetAuthCodeRequest, IGetAuthCodeResponse } from "./types/getAuthCode";
-import { IGetFeedRequest, IGetFeedResponse } from "./types/getFeed";
+import { IGetFeedRequest, IGetFeedResponse, IPost } from "./types/getFeed";
 import { ILoginRequest, ILoginResponse } from "./types/login";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -54,10 +55,20 @@ export const cyfeedApi = createApi({
     /**
      * CONTENT
      */
-    getFeed: builder.query<IGetFeedResponse, IGetFeedRequest>({
+    getFeed: builder.query<IPost[], IGetFeedRequest>({
       query: ({ type, index = 0, size = 10 }) => ({
         url: `/content/feed?type=${type}&index=${index}&size=${size}`,
         method: "GET",
+      }),
+      transformResponse: (response: IGetFeedResponse, meta, arg) => {
+        return response.posts;
+      },
+    }),
+    createPost: builder.mutation<ICreatePostResponse, ICreatePostRequest>({
+      query: (post) => ({
+        url: `/content/posts`,
+        method: "POST",
+        body: post,
       }),
     }),
   }),
@@ -70,4 +81,5 @@ export const {
   useGetFeedQuery,
   useLazyMeQuery,
   useMeQuery,
+  useCreatePostMutation,
 } = cyfeedApi;

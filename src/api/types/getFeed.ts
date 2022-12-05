@@ -18,7 +18,7 @@ export interface IPost {
 }
 
 export enum EPostType {
-  Post = "post",
+  Text = "text",
   Link = "link",
   Qa = "qa",
 }

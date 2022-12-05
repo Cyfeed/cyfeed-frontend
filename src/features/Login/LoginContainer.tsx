@@ -1,5 +1,5 @@
 import { ACCESS_TOKEN, LOGIN_EMAIL, LOGIN_TOKEN } from "../../constants";
-import { Box, FormField, Spinner, TextInput } from "grommet";
+import { Box, FormField, TextInput } from "grommet";
 import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 import { Navigate, useNavigate } from "react-router-dom";
 import { selectCurrentUser, setCredentials, setUser } from "./authSlice";
@@ -26,7 +26,7 @@ export const LoginContainer = () => {
   // API
   const [getLoginCode, { status, error: emailError }] =
     useGetLoginCodeMutation();
-  const [login, { error: loginError, status: loginStatus }] =
+  const [login, { error: loginError, status: loginStatus, isLoading }] =
     useLoginMutation();
 
   const [me] = useLazyMeQuery();
@@ -114,12 +114,13 @@ export const LoginContainer = () => {
           />
         </FormField>
         <CyButton
+          theme={EButtonTheme.White}
+          loading={isLoading}
           primary
           size="large"
           type="submit"
-          theme={EButtonTheme.White}
           disabled={submitCodeDisabled}
-          label={loginStatus !== "pending" ? "Отправить" : <Spinner />}
+          label="Отправить"
           onClick={handleSendCode}
         />
       </Box>

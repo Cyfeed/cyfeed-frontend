@@ -44,11 +44,12 @@ export const EmailForm = ({ onSubmit, status, error }: IEmailFormProps) => {
         </FormField>
 
         <CyButton
+          theme={EButtonTheme.White}
+          loading={status === "pending"}
           margin={{ top: "small" }}
           fill={false}
           label="Получить код"
           size="large"
-          theme={EButtonTheme.White}
           type="submit"
           disabled={disabled}
         />

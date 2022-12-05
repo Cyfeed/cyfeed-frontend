@@ -6,6 +6,7 @@ import { JoinContainer } from "./features/Join";
 import { Layout } from "./Layout";
 import { LoginContainer } from "./features/Login";
 import { Navbar } from "./features/Navbar";
+import { NewPostContainer } from "./features/NewPost";
 import { PrivateOutlet } from "./components/PrivateOutlet";
 import { theme } from "./theme";
 
@@ -20,6 +21,7 @@ function App() {
             <Route path="/login/*" element={<LoginContainer />} />
             <Route path="*" element={<PrivateOutlet />}>
               <Route path="feed" element={<FeedContainer />} />
+              <Route path="new-post" element={<NewPostContainer />} />
             </Route>
           </Routes>
         </Layout>

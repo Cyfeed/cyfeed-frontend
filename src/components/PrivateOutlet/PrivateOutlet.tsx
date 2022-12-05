@@ -2,6 +2,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 import {
   selectAccessToken,
   selectCurrentUser,
+  setCredentials,
   setUser,
 } from "../../features/Login/authSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +14,7 @@ export function PrivateOutlet() {
   const user = useSelector(selectCurrentUser);
   const token = useSelector(selectAccessToken);
   const dispatch = useDispatch();
+
   const { data, error, isFetching } = useMeQuery(undefined, {
     skip: !token || Boolean(user),
   });
@@ -24,6 +26,7 @@ export function PrivateOutlet() {
 
     if (error) {
       localStorage.clear();
+      dispatch(setCredentials({ accessToken: null }));
     }
   }, [data, dispatch, error, token, user]);
 

@@ -21,7 +21,7 @@ const initialState = {
 
 export interface IAuthState {
   user: IGetUserByIdResponse | null;
-  accessToken?: string;
+  accessToken: string | null;
 }
 
 const slice = createSlice({
@@ -30,7 +30,9 @@ const slice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      { payload: { accessToken } }: PayloadAction<{ accessToken: string }>
+      {
+        payload: { accessToken },
+      }: PayloadAction<{ accessToken: string | null }>
     ) => {
       state.accessToken = accessToken;
     },

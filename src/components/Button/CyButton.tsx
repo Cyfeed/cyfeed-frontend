@@ -33,17 +33,17 @@ export const CyButton = ({
 
   return (
     <Button
+      {...buttonProps}
       label={
         !loading ? (
           <Text color={textColor}>{buttonProps.label}</Text>
         ) : (
-          <Box justify="center" align="center">
+          <Box justify="center" align="center" fill="horizontal">
             <Spinner />
           </Box>
         )
       }
       color={bg}
-      {...buttonProps}
     />
   );
 };
