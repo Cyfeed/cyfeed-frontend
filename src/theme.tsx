@@ -9,6 +9,7 @@ export const HACKED_WHITE = "#E1E1E1;";
 export const HACKED_DARK_WHITE = "#B0B8C1";
 export const COLOR_TEXT_XWEAK = "#B9BFC6;";
 export const HACKED_RED = "#EB4B4C";
+export const LANDING_BACKGROUND = "#13161E";
 
 export const UNIT_1 = "4px";
 export const UNIT_2 = "8px";

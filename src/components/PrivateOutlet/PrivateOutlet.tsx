@@ -32,8 +32,14 @@ export function PrivateOutlet() {
       const newCredentials = await refresh(token).unwrap();
 
       if (typeof window !== "undefined") {
-        localStorage.setItem(ACCESS_TOKEN, newCredentials.accessToken);
-        localStorage.setItem(REFRESH_TOKEN, newCredentials.refreshToken);
+        localStorage.setItem(
+          ACCESS_TOKEN,
+          JSON.stringify(newCredentials.accessToken)
+        );
+        localStorage.setItem(
+          REFRESH_TOKEN,
+          JSON.stringify(newCredentials.refreshToken)
+        );
       }
 
       dispatch(
