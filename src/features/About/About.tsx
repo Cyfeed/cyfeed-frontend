@@ -16,6 +16,7 @@ import { Goose } from "./assets/Goose";
 import { Heart } from "./assets/Heart";
 import { LANDING_BACKGROUND } from "../../theme";
 import { Lock } from "./assets/Lock";
+import { Rectangles } from "./assets/Rectangles";
 import styled from "styled-components";
 
 export const AboutContainer = () => {
@@ -23,8 +24,14 @@ export const AboutContainer = () => {
   const mobile = size === "small" || size === "xsmall";
 
   return (
-    <Box background={LANDING_BACKGROUND}>
-      <Box pad={{ vertical: "large", horizontal: "xlarge" }}>
+    <Box
+      background={LANDING_BACKGROUND}
+      margin={{ top: mobile ? "-80px" : "none" }}
+    >
+      <RectanglesBox small={mobile} alignSelf="end">
+        <Rectangles />
+      </RectanglesBox>
+      <Box pad={{ bottom: "large", horizontal: "xlarge", top: "none" }}>
         <Box direction="row" wrap align="end" justify="between">
           <Heading
             level={1}
@@ -263,5 +270,13 @@ const Submit = styled(Button)<{ small: boolean; success: boolean }>`
 
   &:hover {
     box-shadow: none;
+  }
+`;
+
+const RectanglesBox = styled(Box)<{ small: boolean }>`
+  position: relative;
+  & > svg {
+    transform: ${(props) =>
+      props.small ? "scale(0.5) translate(80px, 80px) " : "scale(1)"};
   }
 `;
