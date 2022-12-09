@@ -33,6 +33,7 @@ export const Navbar = () => {
             <Nav fill="horizontal" direction="row" justify="between">
               <Box direction="row" gap="small">
                 <Button plain onClick={() => navigate("/")} label="Главная" />
+                <Button plain onClick={() => navigate("feed")} label="Лента" />
                 <Button
                   plain
                   onClick={() => navigate("new-post")}
