@@ -5,7 +5,6 @@ import {
   Routes,
 } from "react-router-dom";
 
-import { AboutContainer } from "./features/About";
 import { FeedContainer } from "./features/Feed";
 import { Grommet } from "grommet";
 import { JoinContainer } from "./features/Join";
@@ -21,7 +20,7 @@ function App() {
     <Router>
       <Grommet theme={theme} background="black" full>
         <Routes>
-          <Route index element={<AboutContainer />} />
+          {/* <Route index element={<AboutContainer />} /> */}
           <Route
             path="/"
             element={
