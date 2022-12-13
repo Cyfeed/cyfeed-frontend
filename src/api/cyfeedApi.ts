@@ -6,6 +6,7 @@ import { ILoginRequest, ILoginResponse } from "./types/login";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { IGetUserByIdResponse } from "./types/getUserById";
+import { ISignInToWaitingListRequest } from "./types/signToWaitingList";
 import { RootState } from "../store";
 
 export const cyfeedApi = createApi({
@@ -61,6 +62,17 @@ export const cyfeedApi = createApi({
         method: "GET",
       }),
     }),
+    /**
+     * Communication
+     */
+
+    signToWaitingList: builder.mutation<void, ISignInToWaitingListRequest>({
+      query: (email) => ({
+        url: "/communication/email",
+        method: "POST",
+        body: email,
+      }),
+    }),
 
     /**
      * CONTENT
@@ -93,4 +105,5 @@ export const {
   useMeQuery,
   useCreatePostMutation,
   useRefreshTokenMutation,
+  useSignToWaitingListMutation,
 } = cyfeedApi;

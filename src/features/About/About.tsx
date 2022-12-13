@@ -1,17 +1,16 @@
 import {
   Box,
-  Button,
   Grid,
   Heading,
   Paragraph,
   ResponsiveContext,
   Text,
-  TextInput,
 } from "grommet";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useContext } from "react";
 
 import { Diamond } from "./assets/Diamond";
 import { Dollar } from "./assets/Dollar";
+import { EmailField } from "./EmailField";
 import { Goose } from "./assets/Goose";
 import { Heart } from "./assets/Heart";
 import { LANDING_BACKGROUND } from "../../theme";
@@ -185,93 +184,6 @@ const Banner = ({
     </Box>
   );
 };
-
-const EmailField = () => {
-  const [value, setvalue] = useState("");
-  const size = useContext(ResponsiveContext);
-  const mobile = size === "small" || size === "xsmall";
-  const [success, setsuccess] = useState(false);
-
-  const handleSubmit = useCallback(() => {
-    setsuccess(true);
-  }, []);
-
-  return (
-    <Box
-      direction={mobile ? "column" : "row"}
-      align="center"
-      alignContent="center"
-      justify="center"
-      width={{ max: "540px" }}
-      margin="auto"
-    >
-      <Box>
-        <EmailInput
-          small={mobile}
-          value={value}
-          onChange={(e) => setvalue(e.target.value)}
-          width="340px"
-          placeholder={
-            !value ? (
-              <>
-                <Text color="text-xweak">
-                  <Text color="brand">{">"}</Text> name@domain.com
-                </Text>
-                <Box
-                  alignSelf="center"
-                  margin={{ left: "6px" }}
-                  background="brand"
-                  width="10px"
-                  height="18px"
-                ></Box>
-              </>
-            ) : null
-          }
-        />
-      </Box>
-      <Box
-        margin={mobile ? { top: "medium" } : undefined}
-        width={{ max: "189px" }}
-        flex="grow"
-        fill="vertical"
-      >
-        <Submit
-          success={success}
-          small={mobile}
-          type="submit"
-          fill="vertical"
-          onClick={handleSubmit}
-          primary
-          size="medium"
-          color="brand"
-          focusIndicator={false}
-          label={
-            <Text weight="bolder" color="black">
-              Хм, интересно
-            </Text>
-          }
-        />
-      </Box>
-    </Box>
-  );
-};
-
-const EmailInput = styled(TextInput)<{ small: boolean }>`
-  border-radius: ${(props) => {
-    return props.small ? "4px" : "4px 0 0 4px";
-  }};
-  height: ${(props) => (props.small ? "44px" : "57px")};
-`;
-const Submit = styled(Button)<{ small: boolean; success: boolean }>`
-  height: ${(props) => (props.small ? "44px" : "57px")};
-  border-radius: ${(props) => {
-    return props.small ? "4px" : "0 4px 4px 0";
-  }};
-
-  &:hover {
-    box-shadow: none;
-  }
-`;
 
 const RectanglesBox = styled(Box)<{ small: boolean }>`
   position: relative;

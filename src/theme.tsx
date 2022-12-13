@@ -10,6 +10,7 @@ export const HACKED_DARK_WHITE = "#B0B8C1";
 export const COLOR_TEXT_XWEAK = "#B9BFC6;";
 export const HACKED_RED = "#EB4B4C";
 export const LANDING_BACKGROUND = "#13161E";
+export const HACKED_STROKE = `#2C2D39`;
 
 export const UNIT_1 = "4px";
 export const UNIT_2 = "8px";
@@ -23,6 +24,7 @@ export const UNIT_9 = "48px";
 
 export const theme: ThemeType = {
   global: {
+    input: { font: { weight: "normal", size: "16px" } },
     breakpoints: {
       xsmall: {
         value: 425,
@@ -49,7 +51,7 @@ export const theme: ThemeType = {
       "active-text": "text-strong",
       black: HACKED_BLACK,
       border: {
-        dark: "rgba(255, 255, 255, 0.33)",
+        dark: HACKED_STROKE,
         light: "rgba(0, 0, 0, 0.33)",
       },
       brand: HACKED_GREEN,
