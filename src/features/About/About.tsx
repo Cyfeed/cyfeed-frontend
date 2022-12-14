@@ -1,11 +1,4 @@
-import {
-  Box,
-  Grid,
-  Heading,
-  Paragraph,
-  ResponsiveContext,
-  Text,
-} from "grommet";
+import { Box, Heading, Paragraph, ResponsiveContext, Text } from "grommet";
 import { HACKED_GREEN, LANDING_BACKGROUND } from "../../theme";
 import React, { useContext } from "react";
 
@@ -76,15 +69,12 @@ export const AboutContainer = () => {
           Наша цель — нести ценность для отрасли кибербезопасности, обмениваться
           опытом, помогать новичкам и участвовать в ИБ активностях.
         </Paragraph>
-        <Grid
+        <Box
+          direction={mobile ? "column" : "row"}
           margin={{ top: "large" }}
-          columns={{
-            count: mobile ? 1 : 2,
-            size: mobile ? "small" : "auto",
-          }}
-          gap="small"
           align={mobile ? "center" : "start"}
           width={{ max: "1160px" }}
+          gap="large"
         >
           <Banner
             icon={<Lock />}
@@ -96,6 +86,14 @@ export const AboutContainer = () => {
             title="Внутри нам не все равно"
             description="Многим в отрасли поИБ на ИБ. В сообществе мы стараемся сделать наоборот и помогать формировать клуб единомышленников."
           />
+        </Box>
+        <Box
+          direction={mobile ? "column" : "row"}
+          margin={{ top: "medium" }}
+          align={mobile ? "center" : "start"}
+          width={{ max: "1160px" }}
+          gap="large"
+        >
           <Banner
             icon={<Goose />}
             title="Нетворкинг и новые знакомства по всему миру"
@@ -106,7 +104,7 @@ export const AboutContainer = () => {
             title="Профессиональный капитал"
             description="Из-за того, что многие разъехались по миру, сообщество станет местом, где будет аккумулироваться интересный опыт, и продолжит накапливаться профессиональный капитал."
           />
-        </Grid>
+        </Box>
       </Box>
 
       <Box justify="center" pad={{ horizontal: "xlarge", bottom: "medium" }}>
