@@ -119,6 +119,12 @@ export const EmailField = () => {
 const EmailInput = styled(TextInput)<{ small: boolean }>`
   height: ${(props) => (props.small ? "44px" : "57px")};
   box-shadow: 0em 0 40px -15px ${HACKED_GREEN};
+  border: none;
+
+  &:focus {
+    box-shadow: 0em 0 40px -15px ${HACKED_GREEN};
+    border: none;
+  }
 `;
 
 const Submit = styled(Button)<{ small: boolean; success: boolean }>`
