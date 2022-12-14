@@ -7,7 +7,7 @@ import {
   Text,
   TextInput,
 } from "grommet";
-import { HACKED_STROKE, UNIT_1 } from "../../theme";
+import { HACKED_GREEN, HACKED_STROKE, UNIT_1 } from "../../theme";
 import { useCallback, useContext, useState } from "react";
 
 import styled from "styled-components";
@@ -118,6 +118,7 @@ export const EmailField = () => {
 
 const EmailInput = styled(TextInput)<{ small: boolean }>`
   height: ${(props) => (props.small ? "44px" : "57px")};
+  box-shadow: 0em 0 40px -15px ${HACKED_GREEN};
 `;
 
 const Submit = styled(Button)<{ small: boolean; success: boolean }>`

@@ -30,6 +30,7 @@ export const theme: ThemeType = {
         value: 425,
       },
     },
+    edgeSize: { xlarge: "124px" },
     font: {
       family: "IBM Plex Mono",
     },

@@ -6,6 +6,7 @@ import {
   ResponsiveContext,
   Text,
 } from "grommet";
+import { HACKED_GREEN, LANDING_BACKGROUND } from "../../theme";
 import React, { useContext } from "react";
 
 import { Diamond } from "./assets/Diamond";
@@ -13,7 +14,6 @@ import { Dollar } from "./assets/Dollar";
 import { EmailField } from "./EmailField";
 import { Goose } from "./assets/Goose";
 import { Heart } from "./assets/Heart";
-import { LANDING_BACKGROUND } from "../../theme";
 import { Lock } from "./assets/Lock";
 import { Rectangles } from "./assets/Rectangles";
 import styled from "styled-components";
@@ -31,11 +31,17 @@ export const AboutContainer = () => {
         <Rectangles />
       </RectanglesBox>
       <Box pad={{ bottom: "large", horizontal: "xlarge", top: "none" }}>
-        <Box direction="row" wrap align="end" justify="between">
+        <Box
+          direction="row"
+          wrap
+          align="end"
+          justify="between"
+          width={{ max: "660px" }}
+        >
           <Heading
             level={1}
             margin={{ vertical: "none", right: "large" }}
-            size="xlarge"
+            size="large"
             color="brand"
           >
             {"$>CYFEED"}
@@ -44,15 +50,19 @@ export const AboutContainer = () => {
             {"$toxics > /dev/null"}
           </Text>
         </Box>
-        <Paragraph color="white" size="xlarge" margin={{ vertical: "medium" }}>
-          Закрытое сообщество безопасников и профессионалов по
-          кибербезопасности, которым не все равно
-        </Paragraph>
+
+        <Box direction="row">
+          <Text color="white" size="xlarge" margin={{ vertical: "medium" }}>
+            Закрытое сообщество безопасников и профессионалов по
+            кибербезопасности, которым не все равно
+            <Cursor />
+          </Text>
+        </Box>
         <Paragraph
           fill
           color="text-xweak"
           size="medium"
-          margin={{ vertical: "medium" }}
+          margin={{ vertical: "none" }}
         >
           Стань в числе первых частью развивающегося и нетоксичного сообщества
           профессионалов.
@@ -74,6 +84,7 @@ export const AboutContainer = () => {
           }}
           gap="small"
           align={mobile ? "center" : "start"}
+          width={{ max: "1160px" }}
         >
           <Banner
             icon={<Lock />}
@@ -98,21 +109,29 @@ export const AboutContainer = () => {
         </Grid>
       </Box>
 
+      <Box justify="center" pad={{ horizontal: "xlarge", bottom: "medium" }}>
+        <Paragraph color="text-xweak" fill textAlign="center">
+          Could not open /cyfeed/community/ - (13: Permission denied), are you
+          root?
+        </Paragraph>
+      </Box>
+
       <Box
-        direction={size === "xsmall" ? "column" : "row"}
+        direction={mobile ? "column" : "row"}
         gap="medium"
         pad={{ vertical: "large", horizontal: "xlarge" }}
         background="black"
+        align={mobile ? "center" : "start"}
       >
         <Box flex={{ shrink: 0 }}>
           <Dollar />
         </Box>
-        <Box>
-          <Paragraph fill margin="none">
+        <Box gap="small">
+          <Paragraph fill margin="none" textAlign={mobile ? "center" : "start"}>
             Мы решили сделать участие в сообществе
             <Text color="brand"> платным</Text>.
           </Paragraph>
-          <Paragraph fill>
+          <Paragraph margin="none" fill textAlign={mobile ? "center" : "start"}>
             Во-первых, это поможет нам больше работать над сообществом,
             во-вторых, это отличный фильтр и мотивация для будущих участников.
           </Paragraph>
@@ -173,11 +192,7 @@ const Banner = ({
         <Text textAlign={mobile ? "center" : "start"} size="large">
           {title}
         </Text>
-        <Paragraph
-          textAlign={mobile ? "center" : "start"}
-          size="small"
-          color="text-weak"
-        >
+        <Paragraph textAlign={mobile ? "center" : "start"} color="text-weak">
           {description}
         </Paragraph>
       </Box>
@@ -191,4 +206,39 @@ const RectanglesBox = styled(Box)<{ small: boolean }>`
     transform: ${(props) =>
       props.small ? "scale(0.5) translate(80px, 80px) " : "scale(1)"};
   }
+`;
+
+const Cursor = styled.span`
+  opacity: 1;
+
+  background: ${HACKED_GREEN};
+  height: 26px;
+  width: 12px;
+  display: inline-block;
+  position: relative;
+  top: 4px;
+  left: 6px;
+
+  @keyframes blink {
+    0% {
+      opacity: 0;
+    }
+
+    25% {
+      opacity: 0.5;
+    }
+
+    75% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0.5;
+    }
+  }
+
+  animation-name: blink;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 `;
