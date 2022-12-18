@@ -97,7 +97,7 @@ export const AboutContainer = () => {
           <Banner
             icon={<Goose />}
             title="Нетворкинг и новые знакомства по всему миру"
-            description="Общение и обмен опытом с крутыми специалистами по всему миру, разделяющими общие ценности сообщества."
+            description="Общение и обмен опытом с крутыми специалистами по всему миру позволит не “засыхать” как профессионал и взглянуть на отрасль глубже"
           />
           <Banner
             icon={<Diamond />}
@@ -127,7 +127,7 @@ export const AboutContainer = () => {
         <Box gap="small">
           <Paragraph fill margin="none" textAlign={mobile ? "center" : "start"}>
             Мы решили сделать участие в сообществе
-            <Text color="brand"> платным</Text>.
+            <Text color="brand"> платным</Text>. Примерно как стоимость одной чашки кофе в стабраксе.
           </Paragraph>
           <Paragraph margin="none" fill textAlign={mobile ? "center" : "start"}>
             Во-первых, это поможет нам больше работать над сообществом,
