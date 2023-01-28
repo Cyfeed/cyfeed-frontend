@@ -3,16 +3,21 @@ import {
   Button,
   Form,
   FormField,
+  Heading,
+  ResponsiveContext,
   Spinner,
   Text,
   TextArea,
   TextInput,
 } from "grommet";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 
-import { ICreateUserRequest } from "../../api/types/createUser";
-import { UNIT_9 } from "../../theme";
 import { useCreateUserMutation } from "../../api/cyfeedApi";
+import { ICreateUserRequest } from "../../api/types/createUser";
+import { Divider } from "../../components/Divider/Divider";
+import { UNIT_2, UNIT_3, UNIT_9 } from "../../theme";
+import { JoinDisclaimer } from "./JoinDisclaimer";
+import { ValuesDisclaimer } from "./ValuesDisclaimer";
 
 const DEFAULT_VALUE = {
   email: "",
@@ -26,6 +31,8 @@ const DEFAULT_VALUE = {
 };
 
 export const JoinContainer = () => {
+  const size = useContext(ResponsiveContext);
+  const mobile = size === "xsmall";
   const [value, setValue] = useState(DEFAULT_VALUE);
   const [createUser, { status }] = useCreateUserMutation();
 
@@ -38,6 +45,10 @@ export const JoinContainer = () => {
 
   return (
     <Box width={{ max: "698px" }}>
+      <JoinDisclaimer />
+      <Heading level={6} margin={{ top: "none", bottom: "small" }}>
+        О Вас
+      </Heading>
       <Form
         value={value}
         onChange={(nextValue, { touched }) => {
@@ -46,25 +57,32 @@ export const JoinContainer = () => {
         onReset={() => setValue(DEFAULT_VALUE)}
         onSubmit={(event) => handleSubmit(event.value)}
       >
-        <Box flex direction="row" gap={UNIT_9}>
-          <FormField
-            label="First Name"
-            name="firstname"
-            required
-            width={"100%"}
-          >
-            <TextInput name="firstname" size="small" />
+        <Box
+          flex
+          direction={mobile ? "column" : "row"}
+          gap={mobile ? UNIT_3 : UNIT_9}
+        >
+          <FormField label="Имя" name="firstname" required width={"100%"}>
+            <TextInput name="firstname" size="small" placeholder="Dmitrii" />
           </FormField>
-          <FormField label="Last Name" name="lastname" required width={"100%"}>
-            <TextInput size="small" name="lastname" />
+          <FormField label="Фамилия" name="lastname" required width={"100%"}>
+            <TextInput size="small" name="lastname" placeholder="Ivanov" />
           </FormField>
         </Box>
-        <Box flex direction="row" gap={UNIT_9}>
+        <Box
+          flex
+          direction={mobile ? "column" : "row"}
+          gap={mobile ? UNIT_3 : UNIT_9}
+        >
           <FormField label="Email" name="email" required width={"100%"}>
-            <TextInput size="small" name="email" />
+            <TextInput
+              size="small"
+              name="email"
+              placeholder="name@address.com"
+            />
           </FormField>
           <FormField
-            label="Username"
+            label="Никнейм"
             name="username"
             required
             width={"100%"}
@@ -79,20 +97,46 @@ export const JoinContainer = () => {
               </Box>
             }
           >
-            <TextInput size="small" name="username" />
+            <TextInput size="small" name="username" placeholder="Hacker_777" />
           </FormField>
         </Box>
-        <Box flex direction="row" gap={UNIT_9}>
-          <FormField label="Work" name="work" required width={"100%"}>
-            <TextInput size="small" name="work" />
-          </FormField>
-          <FormField label="Role" name="position" required width={"100%"}>
-            <TextInput size="small" name="position" />
-          </FormField>
-        </Box>
-        <Box flex direction="row">
+        <Divider />
+        <Heading level={6} margin={{ top: "small", bottom: "small" }}>
+          Профессиональный опыт
+        </Heading>
+        <Box
+          flex
+          direction={mobile ? "column" : "row"}
+          gap={mobile ? UNIT_2 : UNIT_9}
+        >
           <FormField
-            label="Tell us about yourself"
+            label="Где вы работаете"
+            name="work"
+            required
+            width={"100%"}
+          >
+            <TextInput size="small" name="work" placeholder="Cyfeed Inc." />
+          </FormField>
+          <FormField
+            label="На какой позиции"
+            name="position"
+            required
+            width={"100%"}
+          >
+            <TextInput
+              size="small"
+              name="position"
+              placeholder="Cybesecurity engineer"
+            />
+          </FormField>
+        </Box>
+        <Box
+          flex
+          direction={mobile ? "column" : "row"}
+          gap={mobile ? UNIT_2 : UNIT_9}
+        >
+          <FormField
+            label="Расскажите немного о себе"
             name="introduction"
             width={"100%"}
           >
@@ -105,11 +149,21 @@ export const JoinContainer = () => {
             />
           </FormField>
         </Box>
-        <Box flex direction="row">
-          <FormField label="Your Linkedin" name="linkedin" width={"100%"}>
-            <TextInput size="small" name="linkedin" />
+        <Box
+          flex
+          direction={mobile ? "column" : "row"}
+          gap={mobile ? UNIT_2 : UNIT_9}
+        >
+          <FormField label="Ссылка Linkedin" name="linkedin" width={"100%"}>
+            <TextInput
+              size="small"
+              name="linkedin"
+              placeholder="https://linkedin.com/durov"
+            />
           </FormField>
         </Box>
+        <Divider />
+        <ValuesDisclaimer />
         <Box margin={{ top: "medium" }} align="start">
           <Button
             primary
@@ -120,7 +174,7 @@ export const JoinContainer = () => {
             label={
               status !== "pending" ? (
                 <Text weight="bold" color={"active-background"}>
-                  Request access
+                  Хочу в сообщество
                 </Text>
               ) : (
                 <Spinner />

@@ -103,9 +103,18 @@ export const theme: ThemeType = {
   },
   button: {
     size: {
-      large: { border: { radius: UNIT_2 } },
-      medium: { border: { radius: UNIT_2 } },
-      small: { border: { radius: UNIT_2 } },
+      large: {
+        border: { radius: UNIT_2 },
+        pad: { horizontal: "22px", vertical: "10px" },
+      },
+      medium: {
+        border: { radius: UNIT_2 },
+        pad: { horizontal: "20px", vertical: "4px" },
+      },
+      small: {
+        border: { radius: UNIT_2 },
+        pad: { horizontal: "16px", vertical: "2px" },
+      },
     },
   },
   formField: {
@@ -116,7 +125,7 @@ export const theme: ThemeType = {
       size: "xsmall",
       requiredIndicator: (
         <Text margin={{ start: "xsmall" }} size="xsmall" color={"text-xweak"}>
-          (Required)
+          (обязательно)
         </Text>
       ),
     },

@@ -1,27 +1,37 @@
 import {
-  ACCESS_TOKEN,
-  LOGIN_EMAIL,
-  LOGIN_TOKEN,
-  REFRESH_TOKEN,
-} from "../../constants";
-import { Box, FormField, TextInput } from "grommet";
-import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
-import { Navigate, useNavigate } from "react-router-dom";
-import { selectCurrentUser, setCredentials, setUser } from "./authSlice";
-import { useCallback, useEffect, useState } from "react";
+  Box,
+  FormField,
+  Heading,
+  Paragraph,
+  ResponsiveContext,
+  TextInput,
+} from "grommet";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
 import {
   useGetLoginCodeMutation,
   useLazyMeQuery,
   useLoginMutation,
 } from "../../api/cyfeedApi";
+import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
+import {
+  ACCESS_TOKEN,
+  LOGIN_EMAIL,
+  LOGIN_TOKEN,
+  REFRESH_TOKEN,
+} from "../../constants";
+import { selectCurrentUser, setCredentials, setUser } from "./authSlice";
 
-import { EmailForm } from "./EmailForm";
+import { Divider } from "../../components/Divider";
 import { useLocalStorage } from "../../utils/useLocalStorage";
+import { EmailForm } from "./EmailForm";
 
 export const LoginContainer = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const size = useContext(ResponsiveContext);
+  const mobile = size === "xsmall";
 
   const currentUser = useSelector(selectCurrentUser);
 
@@ -108,37 +118,50 @@ export const LoginContainer = () => {
   return currentUser ? (
     <Navigate to="/feed" />
   ) : (
-    <Box>
-      <EmailForm
-        onSubmit={handleSubmit}
-        status={status}
-        error={emailErrorMessage}
-      />
-
-      <Box margin={{ top: "medium" }} align="start" width="320px" gap="medium">
-        <FormField
-          label="Код из письма"
-          error={loginError && "Ошибка авторизации"}
-        >
-          <TextInput
-            disabled={submitCodeDisabled}
-            type="number"
-            size="small"
-            placeholder="0x0000"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-          />
-        </FormField>
-        <CyButton
-          theme={EButtonTheme.White}
-          loading={isLoading}
-          primary
-          size="large"
-          type="submit"
-          disabled={submitCodeDisabled}
-          label="Отправить"
-          onClick={handleSendCode}
+    <Box width={{ max: "800px" }}>
+      <Paragraph size="small" fill>
+        Если вы уже являетесь зарегистрированным пользователем сообщества,
+        пожалуйста, укажите свой адрес электронной почты, и мы вышлем вам нашу
+        ссылку для входа.
+      </Paragraph>
+      <Box width={{ max: "320px" }}>
+        <Divider />
+        <Heading level={6} margin={{ vertical: "small" }} size="small">
+          Вход в сообщество
+        </Heading>
+        <EmailForm
+          onSubmit={handleSubmit}
+          status={status}
+          error={emailErrorMessage}
         />
+
+        <Box margin={{ top: "medium" }} align="start" gap="small" fill={mobile}>
+          <FormField
+            label="Код из письма"
+            error={loginError && "Ошибка авторизации"}
+            width={mobile ? "100%" : undefined}
+          >
+            <TextInput
+              disabled={submitCodeDisabled}
+              type="number"
+              size="small"
+              placeholder="0x0000"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+            />
+          </FormField>
+          <CyButton
+            theme={EButtonTheme.White}
+            loading={isLoading}
+            primary
+            size="large"
+            type="submit"
+            disabled={submitCodeDisabled}
+            label="Войти"
+            onClick={handleSendCode}
+            fill={mobile}
+          />
+        </Box>
       </Box>
     </Box>
   );

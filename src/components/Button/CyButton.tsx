@@ -1,4 +1,4 @@
-import { Box, Button, ButtonExtendedProps, Spinner, Text } from "grommet";
+import { Box, Button, ButtonExtendedProps, Text } from "grommet";
 
 export enum EButtonTheme {
   Green = "green",
@@ -35,11 +35,11 @@ export const CyButton = ({
     <Button
       {...buttonProps}
       label={
-        !loading ? (
-          <Text color={textColor}>{buttonProps.label}</Text>
-        ) : (
-          <Box justify="center" align="center" fill="horizontal">
-            <Spinner />
+        buttonProps.label && (
+          <Box>
+            <Text size="small" weight="bolder" color={textColor}>
+              {buttonProps.label}
+            </Text>
           </Box>
         )
       }
