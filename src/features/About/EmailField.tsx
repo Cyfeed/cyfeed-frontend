@@ -102,7 +102,7 @@ export const EmailField = () => {
                   color={isSuccess ? "brand" : "black"}
                 >
                   {isSuccess
-                    ? "Спасибо, сообщим как будем готовы"
+                    ? "Спасибо за интерес <3"
                     : "Хм, интересно"}
                 </Text>
               ) : (
