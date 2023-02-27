@@ -1,33 +1,41 @@
-import { Box, Image, Text } from "grommet";
+import { Box, Text } from "grommet";
 
-import { IPost } from "../../api/types/getFeed";
+import { IPost, IPostReaction } from "../../api/types/getFeed";
 import { UNIT_1 } from "../../theme";
 // @ts-ignore TODO: установить типы
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { relativeTimeFromDates } from "../../features/Post/PostView";
+import { Reaction } from "../Reaction/Reaction";
 
 interface IFeedItemProps {
   post: IPost;
 }
 
-const reactionsMock = [
-  { count: 100, src: "asld1" },
-  { count: 3, src: "asld2" },
-  { count: 3, src: "asld3" },
-  { count: 3, src: "asld4" },
-  { count: 3, src: "asld5" },
+export const reactionsMock: IPostReaction[] = [
+  { count: 100, imageURL: "asld1", id: "1", name: "name" },
+  { count: 3, imageURL: "asld2", id: "12", name: "name" },
+  { count: 3, imageURL: "asld3", id: "13", name: "name" },
+  { count: 3, imageURL: "asld4", id: "14", name: "name" },
+  { count: 3, imageURL: "asld5", id: "15", name: "name" },
 ];
 
 export const FeedItem = ({ post }: IFeedItemProps) => {
-  const { title, publishedAt, author } = post;
-  const displayDate = new Date(publishedAt).toLocaleDateString("ru-RU", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  const { title, publishedAt, author, id } = post;
+  const navigate = useNavigate();
+
+  const handleTitleClick = useCallback(() => {
+    navigate(`/post/${id}`);
+  }, [id, navigate]);
+
+  const displayDate = relativeTimeFromDates(new Date(publishedAt));
 
   return (
     <Box pad="medium" gap="small">
-      <Text size="small">{title}</Text>
+      <Title onClick={handleTitleClick} size="small">
+        {title}
+      </Title>
       <Box direction="row" gap="medium">
         <Text size="xsmall" color="text-xweak">
           {displayDate}
@@ -38,11 +46,7 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
       </Box>
       <ReactionsBox direction="row" margin={{ top: "xsmall" }} wrap>
         {reactionsMock.map((reaction) => (
-          <Reaction
-            key={reaction.src}
-            count={reaction.count}
-            src={reaction.src}
-          />
+          <Reaction key={reaction.id} reaction={reaction} />
         ))}
         <Box
           width="fit-content"
@@ -63,33 +67,10 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
   );
 };
 
-interface IReactionProps {
-  count: number;
-  src: string;
-}
-
-const Reaction = ({ count, src }: IReactionProps) => {
-  return (
-    <Box
-      width="fit-content"
-      align="center"
-      justify="start"
-      pad={{ vertical: "4px", horizontal: "6px" }}
-      background="background-contrast"
-      direction="row"
-      gap="small"
-      round={UNIT_1}
-    >
-      <Box width="12px" height="12px">
-        <Image width="12px" src={src} fit="contain" />
-      </Box>
-      <Text color="text-weak" size="xsmall">
-        {count}
-      </Text>
-    </Box>
-  );
-};
-
 const ReactionsBox = styled(Box)`
   gap: ${UNIT_1};
+`;
+
+const Title = styled(Text)`
+  cursor: pointer;
 `;

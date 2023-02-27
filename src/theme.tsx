@@ -33,6 +33,7 @@ export const theme: ThemeType = {
     edgeSize: { xlarge: "124px" },
     font: {
       family: "IBM Plex Mono",
+      size: "16px",
     },
     colors: {
       active: HACKED_GREY,
@@ -99,6 +100,16 @@ export const theme: ThemeType = {
       border: {
         radius: UNIT_1,
       },
+    },
+  },
+  paragraph: {
+    medium: {
+      size: "16px",
+    },
+  },
+  text: {
+    medium: {
+      size: "16px",
     },
   },
   button: {

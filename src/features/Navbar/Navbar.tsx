@@ -1,63 +1,29 @@
-import {
-  Box,
-  Button,
-  Header,
-  Menu,
-  Nav,
-  ResponsiveContext,
-  Text,
-} from "grommet";
+import { Header, ResponsiveContext } from "grommet";
+import styled from "styled-components";
 
-import { selectCurrentUser } from "../Login/authSlice";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../../utils/useAuth";
+import { HeaderDesktop } from "./HeaderDesktop";
+import { HeaderMobile } from "./HeaderMobile";
 
 export const Navbar = () => {
-  const navigate = useNavigate();
-  const currentUser = useSelector(selectCurrentUser);
+  const { user, userIsFetching } = useAuth();
 
   return (
     <Header pad="medium">
       <ResponsiveContext.Consumer>
         {(responsive) =>
-          responsive === "xsmall" ? (
-            <Menu
-              label="Menu"
-              items={[
-                { label: "This is", onClick: () => {} },
-                { label: "The Menu", onClick: () => {} },
-                { label: "Component", onClick: () => {} },
-              ]}
-            />
+          responsive === "small" || responsive === "xsmall" ? (
+            <HeaderMobile user={user} userIsFetching={userIsFetching} />
           ) : (
-            <Nav fill="horizontal" direction="row" justify="between">
-              <Box direction="row" gap="small">
-                <Button plain onClick={() => navigate("/")} label="Главная" />
-                <Button plain onClick={() => navigate("feed")} label="Лента" />
-                <Button
-                  plain
-                  onClick={() => navigate("new-post")}
-                  label="Создать"
-                />
-              </Box>
-              <Box direction="row" gap="small">
-                {currentUser ? (
-                  <Text>{currentUser.username}</Text>
-                ) : (
-                  <>
-                    <Button
-                      plain
-                      onClick={() => navigate("login")}
-                      label="Войти"
-                    />
-                    <Button plain onClick={() => navigate("join")} />
-                  </>
-                )}
-              </Box>
-            </Nav>
+            <HeaderDesktop user={user} userIsFetching={userIsFetching} />
           )
         }
       </ResponsiveContext.Consumer>
     </Header>
   );
 };
+
+export const CustomNavLink = styled(NavLink)`
+  text-decoration: none;
+`;

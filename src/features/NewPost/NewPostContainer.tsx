@@ -1,16 +1,16 @@
 import { Box, Form, FormField, TextArea, TextInput } from "grommet";
-import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 import { useCallback, useState } from "react";
+import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 
-import { EPostType } from "../../api/types/getFeed";
-import { ICreatePostRequest } from "../../api/types/createPost";
 import { useCreatePostMutation } from "../../api/cyfeedApi";
+import { ICreatePostRequest } from "../../api/types/createPost";
+import { EPostType } from "../../api/types/getFeed";
 
 const DEFAULT_VALUE = {
   link: "",
   text: "",
   title: "",
-  type: EPostType.Text,
+  type: EPostType.Post,
 };
 
 export const NewPostContainer = () => {
