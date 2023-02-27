@@ -1,5 +1,5 @@
 import { Box, Heading, Markdown, Paragraph, Text } from "grommet";
-import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
 import styled from "styled-components";
 import { IPostTag, IPostViewItem } from "../../api/types/getFeed";
 import { reactionsMock } from "../../components/FeedItem";
@@ -84,25 +84,20 @@ export function relativeTimeFromElapsed(elapsed: number): string {
   return "";
 }
 
-const MOCK_TAGS: IPostTag[] = [
-  { id: "1", name: "/threatmodel" },
-  { id: "2", name: "/infrasec" },
-  { id: "3", name: "/security" },
-  { id: "4", name: "/0day" },
-];
-
 export const PostView = ({ post }: IProps) => {
   const {
     title,
     author,
     link,
     publishedAt,
-    text = DEFAULT_MD,
-    tags = MOCK_TAGS,
+    text,
+    tags = [],
     reactions = reactionsMock,
   } = post;
 
-  const navigate = useNavigate();
+  const goTo = useCallback((url: string) => {
+    window.open(url, "_blank");
+  }, []);
 
   return (
     <Box>
@@ -126,14 +121,16 @@ export const PostView = ({ post }: IProps) => {
           <Heading margin="none" weight="normal" level={3}>
             {title}
           </Heading>
-          <Text onClick={() => navigate(link)} color="text-xweak" size="xsmall">
+          <Text onClick={() => goTo(link)} color="text-xweak" size="xsmall">
             ({link})
           </Text>
         </LinkBox>
       )}
-      <Markdown components={{ p: <Paragraph size="medium" /> }}>
-        {text}
-      </Markdown>
+      {text && (
+        <Markdown components={{ p: <Paragraph size="medium" /> }}>
+          {text}
+        </Markdown>
+      )}
       <Tags tags={tags} />
     </Box>
   );

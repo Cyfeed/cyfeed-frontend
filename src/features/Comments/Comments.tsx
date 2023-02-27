@@ -6,15 +6,16 @@ import { Comment } from "../../components/Comment";
 
 type Props = {
   comments: IPostCommentParent[];
+  refetch(): void;
 };
 
-export const Comments = ({ comments }: Props) => {
+export const Comments = ({ comments, refetch }: Props) => {
   return (
     <Box>
       {comments.map(({ comment, child }) => (
         <Fragment key={comment.id}>
           <ParentBox margin={{ vertical: "medium" }}>
-            <Comment comment={comment} />
+            <Comment comment={comment} canAnswer refetch={refetch} />
           </ParentBox>
           <ChildBox
             pad={{ left: "large" }}
@@ -29,7 +30,11 @@ export const Comments = ({ comments }: Props) => {
               child.length > 0 &&
               child.map((comment) => (
                 <Box key={comment.id} margin={{ bottom: "medium" }}>
-                  <Comment comment={comment} />
+                  <Comment
+                    comment={comment}
+                    canAnswer={false}
+                    refetch={refetch}
+                  />
                 </Box>
               ))}
           </ChildBox>

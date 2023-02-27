@@ -17,6 +17,7 @@ import {
 } from "./types/getPostComments";
 import { IGetPostRequest } from "./types/getPostRequest";
 import { IGetUserByIdResponse } from "./types/getUserById";
+import { IPostCommentRequest, IPostCommentResponse } from "./types/postComment";
 import { ISignInToWaitingListRequest } from "./types/signToWaitingList";
 
 export const cyfeedApi = createApi({
@@ -117,6 +118,16 @@ export const cyfeedApi = createApi({
         return response;
       },
     }),
+    sendPostComment: builder.query<IPostCommentResponse, IPostCommentRequest>({
+      query: ({ postId, parent, text }) => ({
+        url: `/comment/${postId}`,
+        method: "POST",
+        body: { parent, text },
+      }),
+      transformResponse: (response: IPostCommentResponse) => {
+        return response;
+      },
+    }),
     createPost: builder.mutation<ICreatePostResponse, ICreatePostRequest>({
       query: (post) => ({
         url: `/content/posts`,
@@ -137,6 +148,8 @@ export const {
   useCreatePostMutation,
   useGetPostQuery,
   useGetPostCommentsQuery,
+  useLazyGetPostCommentsQuery,
   useRefreshTokenMutation,
   useSignToWaitingListMutation,
+  useLazySendPostCommentQuery,
 } = cyfeedApi;

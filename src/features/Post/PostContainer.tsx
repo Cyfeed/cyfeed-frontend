@@ -8,7 +8,7 @@ export const PostContainer = () => {
   const { id = "" } = useParams();
 
   const { data: post } = useGetPostQuery({ id });
-  const { data: comments } = useGetPostCommentsQuery({ postId: id });
+  const { data: comments, refetch } = useGetPostCommentsQuery({ postId: id });
 
   if (!post) {
     return null;
@@ -20,7 +20,7 @@ export const PostContainer = () => {
       {comments && (
         <>
           <Divider />
-          <Comments comments={comments} />
+          <Comments comments={comments} refetch={refetch} />
         </>
       )}
     </>
