@@ -1,7 +1,11 @@
 type TCommentId = string;
 
 export interface IPostComment {
-  authorName: string;
+  author: {
+    authorName?: string;
+    id: string;
+    workPosition?: string;
+  };
   deleted: boolean;
   edited: boolean;
   id: TCommentId;

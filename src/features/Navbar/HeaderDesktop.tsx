@@ -60,6 +60,15 @@ export const HeaderDesktop = ({
               )}
             </CustomNavLink>
           )}
+          {isLoggedIn && (
+            <CustomNavLink to={`profile/me`}>
+              {({ isActive }) => (
+                <Text size="small" color={isActive ? "brand" : "white"}>
+                  Профиль
+                </Text>
+              )}
+            </CustomNavLink>
+          )}
         </Box>
       </Box>
     </Nav>

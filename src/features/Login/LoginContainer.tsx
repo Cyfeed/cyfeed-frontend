@@ -17,6 +17,7 @@ import {
 import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 import {
   ACCESS_TOKEN,
+  ACCESS_TOKEN_EXPIRES_AT,
   LOGIN_EMAIL,
   LOGIN_TOKEN,
   REFRESH_TOKEN,
@@ -51,6 +52,10 @@ export const LoginContainer = () => {
   const [email, setEmail] = useLocalStorage(LOGIN_EMAIL, "");
   const [, setAccessToken] = useLocalStorage(ACCESS_TOKEN, "");
   const [, setRefreshToken] = useLocalStorage(REFRESH_TOKEN, "");
+  const [, setAccessTokenExpiresAt] = useLocalStorage(
+    ACCESS_TOKEN_EXPIRES_AT,
+    ""
+  );
 
   const emailErrorMessage =
     // @ts-expect-error TODO: типизировать ошибки
@@ -83,7 +88,7 @@ export const LoginContainer = () => {
 
   const handleSendCode = useCallback(async () => {
     if (loginToken && email) {
-      const { accessToken, refreshToken } = await login({
+      const { accessToken, refreshToken, accessTokenExpiresAt } = await login({
         authCode: code,
         email,
         loginToken,
@@ -93,7 +98,10 @@ export const LoginContainer = () => {
 
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);
-      dispatch(setCredentials({ accessToken, refreshToken }));
+      setAccessTokenExpiresAt(accessTokenExpiresAt);
+      dispatch(
+        setCredentials({ accessToken, refreshToken, accessTokenExpiresAt })
+      );
 
       const userData = await me().unwrap();
       dispatch(setUser({ user: userData }));
@@ -106,6 +114,7 @@ export const LoginContainer = () => {
     loginToken,
     me,
     setAccessToken,
+    setAccessTokenExpiresAt,
     setRefreshToken,
   ]);
 

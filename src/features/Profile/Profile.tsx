@@ -1,0 +1,5 @@
+type Props = {};
+
+export const Profile = (props: Props) => {
+  return <div>Profile</div>;
+};

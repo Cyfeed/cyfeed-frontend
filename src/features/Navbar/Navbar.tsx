@@ -1,13 +1,16 @@
 import { Header, ResponsiveContext } from "grommet";
 import styled from "styled-components";
 
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../utils/useAuth";
+import { cyfeedApi } from "../../api/cyfeedApi";
+import { selectCurrentUser } from "../Login/authSlice";
 import { HeaderDesktop } from "./HeaderDesktop";
 import { HeaderMobile } from "./HeaderMobile";
 
 export const Navbar = () => {
-  const { user, userIsFetching } = useAuth();
+  const user = useSelector(selectCurrentUser);
+  const { isFetching: userIsFetching } = cyfeedApi.endpoints.me.useQueryState();
 
   return (
     <Header pad="medium">

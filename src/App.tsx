@@ -14,8 +14,10 @@ import { LoginContainer } from "./features/Login";
 import { Navbar } from "./features/Navbar";
 import { NewPostContainer } from "./features/NewPost";
 import { PostContainer } from "./features/Post/PostContainer";
+import { Profile, ProfileMe } from "./features/Profile";
 import { Layout } from "./Layout";
 import { theme } from "./theme";
+import { useAuth } from "./utils/useAuth";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,6 +42,10 @@ const router = createBrowserRouter(
           <Route path="post">
             <Route path=":id" element={<PostContainer />}></Route>
           </Route>
+          <Route path="profile">
+            <Route path=":id" element={<Profile />} />
+            <Route path="me" element={<ProfileMe />} />
+          </Route>
           <Route path="new-post" element={<NewPostContainer />} />
           <Route
             path="*"
@@ -57,6 +63,8 @@ const router = createBrowserRouter(
 );
 
 function App() {
+  useAuth();
+
   return (
     <Grommet theme={theme} background="black" full>
       <RouterProvider router={router} />

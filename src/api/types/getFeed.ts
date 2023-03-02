@@ -37,7 +37,7 @@ export interface IPostReaction {
 }
 
 export enum EPostType {
-  Post = "post",
+  Text = "text",
   Link = "link",
   Qa = "qa",
 }

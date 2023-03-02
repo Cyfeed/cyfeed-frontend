@@ -2,26 +2,38 @@ import { Box, Form, FormField, TextArea, TextInput } from "grommet";
 import { useCallback, useState } from "react";
 import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 
+import { useNavigate } from "react-router-dom";
 import { useCreatePostMutation } from "../../api/cyfeedApi";
-import { ICreatePostRequest } from "../../api/types/createPost";
 import { EPostType } from "../../api/types/getFeed";
 
-const DEFAULT_VALUE = {
-  link: "",
+const DEFAULT_VALUE: INewPostValue = {
+  link: undefined,
   text: "",
   title: "",
-  type: EPostType.Post,
 };
 
+interface INewPostValue {
+  title: string;
+  link?: string;
+  text: string;
+}
+
 export const NewPostContainer = () => {
-  const [value, setValue] = useState(DEFAULT_VALUE);
+  const [value, setValue] = useState<INewPostValue>(DEFAULT_VALUE);
   const [createPost, { isLoading }] = useCreatePostMutation();
+  const navigate = useNavigate();
 
   const handleSubmit = useCallback(
-    (post: ICreatePostRequest) => {
-      createPost(post);
+    async (post: INewPostValue) => {
+      const type = post.link ? EPostType.Link : EPostType.Text;
+
+      const { id } = await createPost({ ...post, type }).unwrap();
+
+      if (id) {
+        navigate(`/post/${id}`);
+      }
     },
-    [createPost]
+    [createPost, navigate]
   );
 
   return (

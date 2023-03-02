@@ -73,6 +73,12 @@ export const cyfeedApi = createApi({
         method: "GET",
       }),
     }),
+    getUserById: builder.query<IGetUserByIdResponse, void>({
+      query: (userId) => ({
+        url: `/auth/users/id/${userId}`,
+        method: "GET",
+      }),
+    }),
     /**
      * Communication
      */

@@ -1,44 +1,68 @@
-import { Box, Button, FormField, Paragraph, Text, TextArea } from "grommet";
-import { Close, Send } from "grommet-icons";
+import { Box, Button, Paragraph, Text } from "grommet";
 import { useCallback, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { useLazySendPostCommentQuery } from "../../api/cyfeedApi";
 import { IPostComment } from "../../api/types/getPostComments";
+import { selectCurrentUser } from "../../features/Login/authSlice";
+import { ReplyInput } from "../ReplyInput";
 
-type Props = {
-  comment: IPostComment;
-  canAnswer: boolean;
-  refetch(): void;
-};
-
-export const Comment = ({ comment, canAnswer, refetch }: Props) => {
-  const { id = "" } = useParams();
-  const [sendComment, { isFetching }] = useLazySendPostCommentQuery();
-  const { authorName, text } = comment;
-  const [answerActive, setAnswerActive] = useState<boolean>(false);
-  const [answer, setAnswer] = useState("");
-
-  const send = useCallback(async () => {
-    if (id && answer.length > 0) {
-      const response = await sendComment({
-        postId: id,
-        text: answer,
-        parent: comment.id,
-      }).unwrap();
-
-      if (response.id) {
-        setAnswer("");
-        refetch();
-        setAnswerActive(false);
-      }
+type Props =
+  | {
+      comment: IPostComment;
+      canAnswer: true;
+      onSend(answer: string, commentId: string, postId: string): void;
+      sendIsFetching: boolean;
     }
-  }, [answer, comment.id, id, refetch, sendComment]);
+  | {
+      comment: IPostComment;
+      canAnswer: false;
+      onSend?: undefined;
+      sendIsFetching?: undefined;
+    };
+
+export const Comment = ({
+  comment,
+  canAnswer,
+  onSend,
+  sendIsFetching,
+}: Props) => {
+  const { id = "" } = useParams();
+  const navigate = useNavigate();
+  const user = useSelector(selectCurrentUser);
+
+  const {
+    author: { authorName, id: authorId, workPosition },
+    text,
+  } = comment;
+  const [answerActive, setAnswerActive] = useState<boolean>(false);
+
+  const handleSend = useCallback(
+    async (answer: string) => {
+      if (canAnswer) {
+        await onSend(answer, id, comment.id);
+      }
+    },
+    [canAnswer, comment.id, id, onSend]
+  );
 
   return (
     <>
       <Box>
-        <LinkText size="small">{authorName}</LinkText>
+        <LinkText
+          size="small"
+          onClick={() =>
+            navigate(
+              authorId === user?.id ? `/profile/me` : `/profile/${authorId}`,
+              { replace: true }
+            )
+          }
+        >
+          {authorName}
+        </LinkText>
+        <Text margin={{ top: "xxsmall" }} color="text-xweak" size="small">
+          {workPosition}
+        </Text>
         <Paragraph margin={{ vertical: "small" }} size="small" fill>
           {text}
         </Paragraph>
@@ -53,29 +77,8 @@ export const Comment = ({ comment, canAnswer, refetch }: Props) => {
             }
           />
         )}
-        {answerActive && (
-          <ReplyField>
-            <Box direction="row" align="center" gap="small">
-              <TextArea
-                disabled={isFetching}
-                size="small"
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-              />
-              <Button
-                disabled={isFetching}
-                onClick={send}
-                icon={<Send size="medium" color="brand" />}
-              />
-              <Box alignSelf="start">
-                <Button
-                  onClick={() => setAnswerActive(false)}
-                  plain
-                  icon={<Close size="small" color="active" />}
-                />
-              </Box>
-            </Box>
-          </ReplyField>
+        {answerActive && canAnswer && (
+          <ReplyInput isFetching={sendIsFetching} onSend={handleSend} />
         )}
       </Box>
     </>
@@ -85,10 +88,4 @@ export const Comment = ({ comment, canAnswer, refetch }: Props) => {
 const LinkText = styled(Text)`
   text-decoration: underline;
   cursor: pointer;
-`;
-
-const ReplyField = styled(FormField)`
-  & > div {
-    border: none;
-  }
 `;

@@ -19,7 +19,7 @@ export interface IGetUserByIdResponse {
   username: string;
 }
 
-enum ENetworkType {
+export enum ENetworkType {
   Linkedin = "linkedin",
   Twitter = "twitter",
   Telegram = "telegram",

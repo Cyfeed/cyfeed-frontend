@@ -1,11 +1,22 @@
+import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useAuth } from "../../utils/useAuth";
+import { cyfeedApi } from "../../api/cyfeedApi";
+import {
+  selectAccessToken,
+  selectCurrentUser,
+  selectRefreshToken,
+} from "../../features/Login/authSlice";
 
 export function PrivateOutlet() {
   const location = useLocation();
 
-  const { user, userIsFetching, tokenIsFetching, accessToken, refreshToken } =
-    useAuth();
+  const user = useSelector(selectCurrentUser);
+  const accessToken = useSelector(selectAccessToken);
+  const refreshToken = useSelector(selectRefreshToken);
+
+  const { isFetching: userIsFetching } = cyfeedApi.endpoints.me.useQueryState();
+  const [, { isLoading: tokenIsFetching }] =
+    cyfeedApi.endpoints.refreshToken.useMutation();
 
   if (user) {
     return <Outlet />;

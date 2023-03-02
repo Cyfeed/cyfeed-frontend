@@ -6,7 +6,7 @@ import { UNIT_1 } from "../../theme";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { relativeTimeFromDates } from "../../features/Post/PostView";
+import { relativeTimeFromDates } from "../../utils/relativeTime";
 import { Reaction } from "../Reaction/Reaction";
 
 interface IFeedItemProps {
