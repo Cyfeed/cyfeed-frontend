@@ -33,7 +33,9 @@ const router = createBrowserRouter(
           </>
         }
       >
-        <Route index element={<FeedContainer />} />
+        <Route path="/" element={<PrivateOutlet />}>
+          <Route index element={<FeedContainer />} />
+        </Route>
         <Route path="/join/*" element={<JoinContainer />} />
         <Route path="/login/*" element={<LoginContainer />} />
 

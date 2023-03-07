@@ -16,6 +16,7 @@ import {
   IPostCommentParent,
 } from "./types/getPostComments";
 import { IGetPostRequest } from "./types/getPostRequest";
+import { IGetTagsResponse, TGetTagsResponseTransformed } from "./types/getTags";
 import { IGetUserByIdResponse } from "./types/getUserById";
 import { IPostCommentRequest, IPostCommentResponse } from "./types/postComment";
 import { ISignInToWaitingListRequest } from "./types/signToWaitingList";
@@ -141,6 +142,14 @@ export const cyfeedApi = createApi({
         body: post,
       }),
     }),
+    tags: builder.query<TGetTagsResponseTransformed, void>({
+      query: () => ({
+        url: "/tags",
+        method: "GET",
+      }),
+      transformResponse: (response: IGetTagsResponse) =>
+        response.map((tag) => ({ label: tag.name, value: tag.id })),
+    }),
   }),
 });
 
@@ -158,4 +167,5 @@ export const {
   useRefreshTokenMutation,
   useSignToWaitingListMutation,
   useLazySendPostCommentQuery,
+  useTagsQuery,
 } = cyfeedApi;

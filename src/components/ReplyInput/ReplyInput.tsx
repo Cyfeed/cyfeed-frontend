@@ -1,5 +1,4 @@
 import { Box, FormField, TextArea } from "grommet";
-import { Send } from "grommet-icons";
 
 import { useCallback, useState } from "react";
 import styled from "styled-components";
@@ -17,7 +16,7 @@ export const ReplyInput = ({ isFetching, onSend }: Props) => {
 
   return (
     <ReplyField>
-      <Box direction="row" align="center" gap="small">
+      <Box direction="column" align="start" gap="medium">
         <TextArea
           placeholder="Ответить в тред"
           disabled={isFetching}
@@ -29,7 +28,9 @@ export const ReplyInput = ({ isFetching, onSend }: Props) => {
           theme={EButtonTheme.White}
           disabled={isFetching || !answer}
           onClick={handleSubmit}
-          icon={<Send size="medium" color="brand" />}
+          label="Ответить"
+          primary
+          size="medium"
         />
       </Box>
     </ReplyField>

@@ -1,5 +1,5 @@
 import { Box } from "grommet";
-import { Fragment, useCallback } from "react";
+import { Fragment, useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useLazySendPostCommentQuery } from "../../api/cyfeedApi";
@@ -15,6 +15,7 @@ type Props = {
 export const Comments = ({ comments, refetch }: Props) => {
   const [sendComment, { isFetching }] = useLazySendPostCommentQuery();
   const { id = "" } = useParams();
+  const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
 
   const send = useCallback(
     async (answer: string, postId: string, parentId?: string) => {
@@ -27,6 +28,7 @@ export const Comments = ({ comments, refetch }: Props) => {
 
         if (response.id) {
           refetch();
+          setActiveReplyId(null);
         }
       }
     },
@@ -47,6 +49,8 @@ export const Comments = ({ comments, refetch }: Props) => {
               canAnswer
               onSend={send}
               sendIsFetching={isFetching}
+              setActiveReplyId={setActiveReplyId}
+              activeReplyId={activeReplyId}
             />
           </ParentBox>
           <ChildBox
@@ -62,7 +66,12 @@ export const Comments = ({ comments, refetch }: Props) => {
               child.length > 0 &&
               child.map((comment) => (
                 <Box key={comment.id} margin={{ bottom: "medium" }}>
-                  <Comment comment={comment} canAnswer={false} />
+                  <Comment
+                    comment={comment}
+                    canAnswer={false}
+                    activeReplyId={activeReplyId}
+                    setActiveReplyId={setActiveReplyId}
+                  />
                 </Box>
               ))}
           </ChildBox>

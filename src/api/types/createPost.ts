@@ -3,6 +3,7 @@ import { EPostType } from "./getFeed";
 export interface ICreatePostRequest {
   link?: string;
   text?: string;
+  tagsIds?: string[];
   title: string;
   type: EPostType;
 }

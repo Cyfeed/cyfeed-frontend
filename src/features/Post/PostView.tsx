@@ -1,8 +1,8 @@
-import { Box, Heading, Markdown, Paragraph, Text } from "grommet";
+import { Box, Button, Heading, Markdown, Paragraph, Text } from "grommet";
+import { Close } from "grommet-icons";
 import { useCallback } from "react";
 import styled from "styled-components";
 import { IPostTag, IPostViewItem } from "../../api/types/getFeed";
-import { reactionsMock } from "../../components/FeedItem";
 import { Reaction } from "../../components/Reaction/Reaction";
 import { HACKED_GREEN, UNIT_1 } from "../../theme";
 import { relativeTimeFromDates } from "../../utils/relativeTime";
@@ -12,15 +12,7 @@ interface IProps {
 }
 
 export const PostView = ({ post }: IProps) => {
-  const {
-    title,
-    author,
-    link,
-    publishedAt,
-    text,
-    tags = [],
-    reactions = reactionsMock,
-  } = post;
+  const { title, author, link, publishedAt, text, tags = [], reactions } = post;
 
   const goTo = useCallback((url: string) => {
     window.open(url, "_blank");
@@ -36,14 +28,14 @@ export const PostView = ({ post }: IProps) => {
           {relativeTimeFromDates(new Date(publishedAt))}
         </Text>
       </Box>
-      {reactions.length > 0 && (
+      {reactions?.length && (
         <Box gap="small" direction="row" margin={{ top: "small" }} wrap>
           {reactions.map((reaction) => (
             <Reaction reaction={reaction} key={reaction.id} />
           ))}
         </Box>
       )}
-      {link && (
+      {link ? (
         <LinkBox direction="row" margin={{ vertical: "medium" }} gap="small">
           <Heading margin="none" weight="normal" level={3}>
             {title}
@@ -52,28 +44,49 @@ export const PostView = ({ post }: IProps) => {
             ({link})
           </Text>
         </LinkBox>
+      ) : (
+        <Box margin={{ vertical: "medium" }}>
+          <Heading margin="none" weight="normal" level={3}>
+            {title}
+          </Heading>
+        </Box>
       )}
+
       {text && (
-        <Markdown components={{ p: <Paragraph size="medium" /> }}>
+        <Markdown components={{ p: <Paragraph size="medium" fill /> }}>
           {text}
         </Markdown>
       )}
-      <Tags tags={tags} />
+      <Box margin={{ top: "medium" }}>
+        <Tags tags={tags} />
+      </Box>
     </Box>
   );
 };
 
-const Tags = ({ tags }: { tags: IPostTag[] }) => {
+export const Tags = ({
+  tags,
+  onRemove,
+}: {
+  tags: IPostTag[];
+  onRemove?(id: string): void;
+}) => {
   return (
     <Box direction="row" wrap gap="small">
       {tags.map((tag) => (
-        <Tag key={tag.id} tag={tag} />
+        <Tag key={tag.id} tag={tag} onRemove={onRemove} />
       ))}
     </Box>
   );
 };
 
-const Tag = ({ tag }: { tag: IPostTag }) => {
+const Tag = ({
+  tag,
+  onRemove,
+}: {
+  tag: IPostTag;
+  onRemove?(id: string): void;
+}) => {
   return (
     <Box
       width="fit-content"
@@ -84,9 +97,15 @@ const Tag = ({ tag }: { tag: IPostTag }) => {
       direction="row"
       gap="small"
       round={UNIT_1}
-      margin={{ top: "medium" }}
     >
       <Text color="text-weak">{tag.name}</Text>
+      {onRemove && (
+        <Button
+          plain
+          icon={<Close size="8px" color="text-weak" />}
+          onClick={() => onRemove(tag.id)}
+        />
+      )}
     </Box>
   );
 };

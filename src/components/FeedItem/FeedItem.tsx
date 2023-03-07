@@ -1,6 +1,6 @@
 import { Box, Text } from "grommet";
 
-import { IPost, IPostReaction } from "../../api/types/getFeed";
+import { IPost } from "../../api/types/getFeed";
 import { UNIT_1 } from "../../theme";
 // @ts-ignore TODO: установить типы
 import { useCallback } from "react";
@@ -13,14 +13,6 @@ interface IFeedItemProps {
   post: IPost;
 }
 
-export const reactionsMock: IPostReaction[] = [
-  { count: 100, imageURL: "asld1", id: "1", name: "name" },
-  { count: 3, imageURL: "asld2", id: "12", name: "name" },
-  { count: 3, imageURL: "asld3", id: "13", name: "name" },
-  { count: 3, imageURL: "asld4", id: "14", name: "name" },
-  { count: 3, imageURL: "asld5", id: "15", name: "name" },
-];
-
 export const FeedItem = ({ post }: IFeedItemProps) => {
   const { title, publishedAt, author, id } = post;
   const navigate = useNavigate();
@@ -32,8 +24,8 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
   const displayDate = relativeTimeFromDates(new Date(publishedAt));
 
   return (
-    <Box pad="medium" gap="small">
-      <Title onClick={handleTitleClick} size="small">
+    <Box pad={{ vertical: "small", horizontal: "medium" }} gap="small">
+      <Title onClick={handleTitleClick} size="medium" weight="bolder">
         {title}
       </Title>
       <Box direction="row" gap="medium">
@@ -44,25 +36,27 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
           {author}
         </Text>
       </Box>
-      <ReactionsBox direction="row" margin={{ top: "xsmall" }} wrap>
-        {reactionsMock.map((reaction) => (
-          <Reaction key={reaction.id} reaction={reaction} />
-        ))}
-        <Box
-          width="fit-content"
-          align="center"
-          justify="start"
-          pad={{ vertical: "4px", horizontal: "6px" }}
-          background="background-contrast"
-          direction="row"
-          gap="small"
-          round={UNIT_1}
-        >
-          <Text color="text-weak" size="xsmall">
-            12 Comments
-          </Text>
-        </Box>
-      </ReactionsBox>
+      {post.reactions?.length && (
+        <ReactionsBox direction="row" margin={{ top: "xsmall" }} wrap>
+          {post.reactions.map((reaction) => (
+            <Reaction key={reaction.id} reaction={reaction} />
+          ))}
+          <Box
+            width="fit-content"
+            align="center"
+            justify="start"
+            pad={{ vertical: "4px", horizontal: "6px" }}
+            background="background-contrast"
+            direction="row"
+            gap="small"
+            round={UNIT_1}
+          >
+            <Text color="text-weak" size="xsmall">
+              {`${post.commentsCount ? post.commentsCount : 0} Comments`}
+            </Text>
+          </Box>
+        </ReactionsBox>
+      )}
     </Box>
   );
 };

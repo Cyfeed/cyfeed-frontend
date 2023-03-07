@@ -1,5 +1,5 @@
 import { Box, Button, Paragraph, Text } from "grommet";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -13,12 +13,16 @@ type Props =
       canAnswer: true;
       onSend(answer: string, commentId: string, postId: string): void;
       sendIsFetching: boolean;
+      activeReplyId: string | null;
+      setActiveReplyId(id: string): void;
     }
   | {
       comment: IPostComment;
       canAnswer: false;
       onSend?: undefined;
       sendIsFetching?: undefined;
+      activeReplyId: string | null;
+      setActiveReplyId(id: string): void;
     };
 
 export const Comment = ({
@@ -26,6 +30,8 @@ export const Comment = ({
   canAnswer,
   onSend,
   sendIsFetching,
+  activeReplyId,
+  setActiveReplyId,
 }: Props) => {
   const { id = "" } = useParams();
   const navigate = useNavigate();
@@ -35,7 +41,11 @@ export const Comment = ({
     author: { authorName, id: authorId, workPosition },
     text,
   } = comment;
-  const [answerActive, setAnswerActive] = useState<boolean>(false);
+  const answerActive = comment.id === activeReplyId;
+
+  const setAnswerActive = useCallback(() => {
+    setActiveReplyId(comment.id);
+  }, [comment.id, setActiveReplyId]);
 
   const handleSend = useCallback(
     async (answer: string) => {
@@ -69,7 +79,7 @@ export const Comment = ({
         {!answerActive && canAnswer && (
           <Button
             plain
-            onClick={() => setAnswerActive(true)}
+            onClick={setAnswerActive}
             label={
               <LinkText color="text-xweak" size="small">
                 Ответить

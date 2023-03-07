@@ -3,8 +3,11 @@ import { useCallback, useState } from "react";
 import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import { useCreatePostMutation } from "../../api/cyfeedApi";
 import { EPostType } from "../../api/types/getFeed";
+import { ITagTransformed } from "../../api/types/getTags";
+import { AddTagContainer } from "../AddTag";
 
 const DEFAULT_VALUE: INewPostValue = {
   link: undefined,
@@ -20,6 +23,7 @@ interface INewPostValue {
 
 export const NewPostContainer = () => {
   const [value, setValue] = useState<INewPostValue>(DEFAULT_VALUE);
+  const [selectedTags, setSelectedTags] = useState<ITagTransformed[]>([]);
   const [createPost, { isLoading }] = useCreatePostMutation();
   const navigate = useNavigate();
 
@@ -27,13 +31,17 @@ export const NewPostContainer = () => {
     async (post: INewPostValue) => {
       const type = post.link ? EPostType.Link : EPostType.Text;
 
-      const { id } = await createPost({ ...post, type }).unwrap();
+      const { id } = await createPost({
+        ...post,
+        type,
+        tagsIds: selectedTags.map((tag) => tag.value),
+      }).unwrap();
 
       if (id) {
         navigate(`/post/${id}`);
       }
     },
-    [createPost, navigate]
+    [createPost, navigate, selectedTags]
   );
 
   return (
@@ -56,6 +64,13 @@ export const NewPostContainer = () => {
             placeholder="https://someblog.com/material"
           />
         </FormField>
+
+        <BorderlessField label="Категории" style={{ border: "none" }}>
+          <AddTagContainer
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+          />
+        </BorderlessField>
 
         <FormField label="Текст" name="text" width={"100%"}>
           <TextArea
@@ -81,3 +96,15 @@ export const NewPostContainer = () => {
     </Box>
   );
 };
+
+const BorderlessField = styled(FormField)`
+  border: none;
+
+  & > * {
+    border: none;
+  }
+
+  &:focus {
+    border: none;
+  }
+`;

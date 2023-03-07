@@ -1,9 +1,10 @@
 import { Box } from "grommet";
-import { FeedItem } from "../../components/FeedItem";
-import { Filters } from "./Filters";
+import { useState } from "react";
 import styled from "styled-components";
 import { useGetFeedQuery } from "../../api/cyfeedApi";
-import { useState } from "react";
+import { FeedItem } from "../../components/FeedItem";
+import { HACKED_DARK_GREY } from "../../theme";
+import { Filters } from "./Filters";
 
 export enum ETimeFilter {
   Week = "week",
@@ -30,12 +31,7 @@ export const TopContainer = () => {
 
 const PostsBox = styled(Box)`
   & > * {
-    border-top-style: dashed;
-    border-top: 1px solid white;
-  }
-
-  &:last-child {
-    border-bottom-style: dashed;
-    border-bottom: 1px solid white;
+    /* border: 1px dashed ${HACKED_DARK_GREY}; */
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='grey' stroke-width='1' stroke-dasharray='6' stroke-dashoffset='2' stroke-linecap='square'/%3e%3c/svg%3e");
   }
 `;
