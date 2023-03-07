@@ -36,27 +36,26 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
           {author}
         </Text>
       </Box>
-      {post.reactions?.length && (
-        <ReactionsBox direction="row" margin={{ top: "xsmall" }} wrap>
-          {post.reactions.map((reaction) => (
-            <Reaction key={reaction.id} reaction={reaction} />
-          ))}
-          <Box
-            width="fit-content"
-            align="center"
-            justify="start"
-            pad={{ vertical: "4px", horizontal: "6px" }}
-            background="background-contrast"
-            direction="row"
-            gap="small"
-            round={UNIT_1}
-          >
-            <Text color="text-weak" size="xsmall">
-              {`${post.commentsCount ? post.commentsCount : 0} Comments`}
-            </Text>
-          </Box>
-        </ReactionsBox>
-      )}
+
+      <ReactionsBox direction="row" margin={{ top: "xsmall" }} wrap>
+        {post.reactions?.map((reaction) => (
+          <Reaction key={reaction.id} reaction={reaction} />
+        ))}
+        <Box
+          width="fit-content"
+          align="center"
+          justify="start"
+          pad={{ vertical: "4px", horizontal: "6px" }}
+          background="background-contrast"
+          direction="row"
+          gap="small"
+          round={UNIT_1}
+        >
+          <Text color="text-weak" size="xsmall">
+            {`Ответов: ${post.commentsCount ? post.commentsCount : 0}`}
+          </Text>
+        </Box>
+      </ReactionsBox>
     </Box>
   );
 };

@@ -9,6 +9,7 @@ import {
   IPostViewItem,
 } from "./types/getFeed";
 import { ILoginRequest, ILoginResponse } from "./types/login";
+import { IPutReactionRequest, IPutReactionResponse } from "./types/putReaction";
 
 import { RootState } from "../store";
 import {
@@ -16,6 +17,7 @@ import {
   IPostCommentParent,
 } from "./types/getPostComments";
 import { IGetPostRequest } from "./types/getPostRequest";
+import { TGetReactionsResponse } from "./types/getReactions";
 import { IGetTagsResponse, TGetTagsResponseTransformed } from "./types/getTags";
 import { IGetUserByIdResponse } from "./types/getUserById";
 import { IPostCommentRequest, IPostCommentResponse } from "./types/postComment";
@@ -150,6 +152,18 @@ export const cyfeedApi = createApi({
       transformResponse: (response: IGetTagsResponse) =>
         response.map((tag) => ({ label: tag.name, value: tag.id })),
     }),
+    getReactions: builder.query<TGetReactionsResponse, void>({
+      query: () => ({
+        method: "GET",
+        url: "/reactions",
+      }),
+    }),
+    putReaction: builder.mutation<IPutReactionResponse, IPutReactionRequest>({
+      query: ({ reactionId, postId }) => ({
+        method: "PUT",
+        url: `/reaction/${reactionId}/${postId}`,
+      }),
+    }),
   }),
 });
 
@@ -168,4 +182,6 @@ export const {
   useSignToWaitingListMutation,
   useLazySendPostCommentQuery,
   useTagsQuery,
+  useGetReactionsQuery,
+  usePutReactionMutation,
 } = cyfeedApi;

@@ -1,18 +1,54 @@
 import { Box, Button, Heading, Markdown, Paragraph, Text } from "grommet";
 import { Close } from "grommet-icons";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import styled from "styled-components";
 import { IPostTag, IPostViewItem } from "../../api/types/getFeed";
+import { IReaction } from "../../api/types/getReactions";
 import { Reaction } from "../../components/Reaction/Reaction";
 import { HACKED_GREEN, UNIT_1 } from "../../theme";
 import { relativeTimeFromDates } from "../../utils/relativeTime";
+import { AddReaction } from "../AddReaction";
 
 interface IProps {
   post: IPostViewItem;
 }
 
 export const PostView = ({ post }: IProps) => {
-  const { title, author, link, publishedAt, text, tags = [], reactions } = post;
+  const {
+    title,
+    author,
+    link,
+    publishedAt,
+    text,
+    tags = [],
+    reactions = [],
+  } = post;
+
+  const [optimisticReactions, setOptimisticReactions] = useState(reactions);
+
+  const addReactionOptimistically = useCallback(
+    (newReaction: IReaction) => {
+      const existingReactionIndex = optimisticReactions.findIndex(
+        ({ id }) => id === newReaction.id
+      );
+
+      if (existingReactionIndex !== -1) {
+        setOptimisticReactions(
+          optimisticReactions.map((reaction) =>
+            reaction.id === newReaction.id
+              ? { ...reaction, count: reaction.count + 1 }
+              : reaction
+          )
+        );
+      } else {
+        setOptimisticReactions([
+          ...optimisticReactions,
+          { ...newReaction, count: 1 },
+        ]);
+      }
+    },
+    [optimisticReactions]
+  );
 
   const goTo = useCallback((url: string) => {
     window.open(url, "_blank");
@@ -28,13 +64,15 @@ export const PostView = ({ post }: IProps) => {
           {relativeTimeFromDates(new Date(publishedAt))}
         </Text>
       </Box>
-      {reactions?.length && (
-        <Box gap="small" direction="row" margin={{ top: "small" }} wrap>
-          {reactions.map((reaction) => (
+      <Box gap="small" direction="row" margin={{ top: "small" }}>
+        <Box gap="small" direction="row" wrap>
+          {optimisticReactions?.map((reaction) => (
             <Reaction reaction={reaction} key={reaction.id} />
           ))}
         </Box>
-      )}
+
+        <AddReaction addReaction={addReactionOptimistically} />
+      </Box>
       {link ? (
         <LinkBox direction="row" margin={{ vertical: "medium" }} gap="small">
           <Heading margin="none" weight="normal" level={3}>
