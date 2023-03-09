@@ -5,7 +5,6 @@ import { IGetAuthCodeRequest, IGetAuthCodeResponse } from "./types/getAuthCode";
 import {
   IGetFeedRequest,
   IGetFeedResponse,
-  IPost,
   IPostViewItem,
 } from "./types/getFeed";
 import { ILoginRequest, ILoginResponse } from "./types/login";
@@ -35,7 +34,7 @@ export const cyfeedApi = createApi({
       return headers;
     },
   }),
-
+  tagTypes: ["Post"],
   endpoints: (builder) => ({
     /**
      * AUTH
@@ -97,13 +96,35 @@ export const cyfeedApi = createApi({
     /**
      * CONTENT
      */
-    getFeed: builder.query<IPost[], IGetFeedRequest>({
+    getFeed: builder.query<
+      { data: IGetFeedResponse; arg: IGetFeedRequest },
+      IGetFeedRequest
+    >({
       query: ({ type, index = 0, size = 10 }) => ({
         url: `/content/feed?type=${type}&index=${index}&size=${size}`,
         method: "GET",
       }),
+      providesTags: ["Post"],
+      // Only have one cache entry because the arg always maps to one string
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName;
+      },
+      // Always merge incoming data to the cache entry
+      merge: (currentCache, newItems) => {
+        if (currentCache.arg.type !== newItems.arg.type) {
+          return newItems;
+        }
+
+        currentCache.data.posts?.push(...newItems.data.posts);
+        currentCache.data.paging = newItems.data.paging;
+        currentCache.arg = newItems.arg;
+      },
+      // Refetch when the page arg changes
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg !== previousArg;
+      },
       transformResponse: (response: IGetFeedResponse, meta, arg) => {
-        return response.posts;
+        return { data: response, arg };
       },
     }),
     getPost: builder.query<IPostViewItem, IGetPostRequest>({
@@ -111,7 +132,7 @@ export const cyfeedApi = createApi({
         url: `/content/posts/${id}`,
         method: "GET",
       }),
-      transformResponse: (response: IPostViewItem) => {
+      transformResponse: (response: IPostViewItem, meta, arg) => {
         return response;
       },
     }),
