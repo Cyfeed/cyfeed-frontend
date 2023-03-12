@@ -1,4 +1,6 @@
 import { Box, Nav, Text } from "grommet";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import { IGetUserByIdResponse } from "../../api/types/getUserById";
 import { Goose24 } from "../About/assets/Goose24";
 import { CustomNavLink } from "./Navbar";
@@ -76,8 +78,17 @@ export const HeaderDesktop = ({
 };
 
 export const Logo = () => {
+  const navigate = useNavigate();
+
   return (
-    <Box direction="row" gap="small" flex={{ shrink: 0 }} align="center">
+    <LinkBox
+      focusIndicator={false}
+      onClick={() => navigate("/")}
+      direction="row"
+      gap="small"
+      flex={{ shrink: 0 }}
+      align="center"
+    >
       <Goose24 />
       <Box
         pad={{ horizontal: "small" }}
@@ -90,6 +101,10 @@ export const Logo = () => {
           CYFEED
         </Text>
       </Box>
-    </Box>
+    </LinkBox>
   );
 };
+
+const LinkBox = styled(Box)`
+  cursor: pointer;
+`;
