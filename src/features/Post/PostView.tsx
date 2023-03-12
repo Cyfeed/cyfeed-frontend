@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { IPostTag, IPostViewItem } from "../../api/types/getFeed";
 import { IReaction } from "../../api/types/getReactions";
 import { Reaction } from "../../components/Reaction/Reaction";
-import { HACKED_GREEN, UNIT_1 } from "../../theme";
+import { HACKED_GREEN, UNIT_1, UNIT_2 } from "../../theme";
 import { relativeTimeFromDates } from "../../utils/relativeTime";
 import { AddReaction } from "../AddReaction";
 
@@ -64,15 +64,17 @@ export const PostView = ({ post }: IProps) => {
           {relativeTimeFromDates(new Date(publishedAt))}
         </Text>
       </Box>
-      <Box gap="small" direction="row" margin={{ top: "small" }}>
-        <Box gap="small" direction="row" wrap>
-          {optimisticReactions?.map((reaction) => (
-            <Reaction reaction={reaction} key={reaction.id} />
-          ))}
-        </Box>
+      <ReactionsBox direction="row" margin={{ top: "small" }}>
+        {optimisticReactions.length !== 0 && (
+          <Box gap="small" direction="row" wrap>
+            {optimisticReactions?.map((reaction) => (
+              <Reaction reaction={reaction} key={reaction.id} />
+            ))}
+          </Box>
+        )}
 
         <AddReaction addReaction={addReactionOptimistically} />
-      </Box>
+      </ReactionsBox>
       {link ? (
         <LinkBox direction="row" margin={{ vertical: "medium" }} gap="small">
           <Heading margin="none" weight="normal" level={3}>
@@ -159,4 +161,8 @@ const LinkBox = styled(Box)`
       color: ${HACKED_GREEN};
     }
   }
+`;
+
+const ReactionsBox = styled(Box)`
+  gap: ${UNIT_2};
 `;

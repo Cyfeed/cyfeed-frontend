@@ -9,6 +9,10 @@ import {
 } from "./types/getFeed";
 import { ILoginRequest, ILoginResponse } from "./types/login";
 import { IPutReactionRequest, IPutReactionResponse } from "./types/putReaction";
+import {
+  IUpdateUserIntroRequest,
+  IUpdateUserIntroResponse,
+} from "./types/updateUserIntro";
 
 import { RootState } from "../store";
 import {
@@ -21,6 +25,7 @@ import { IGetTagsResponse, TGetTagsResponseTransformed } from "./types/getTags";
 import { IGetUserByIdResponse } from "./types/getUserById";
 import { IPostCommentRequest, IPostCommentResponse } from "./types/postComment";
 import { ISignInToWaitingListRequest } from "./types/signToWaitingList";
+import { IUpdateUserRequest, IUpdateUserResponse } from "./types/updateUser";
 
 export const cyfeedApi = createApi({
   reducerPath: "cyfeedApi",
@@ -44,6 +49,23 @@ export const cyfeedApi = createApi({
         url: `auth/users`,
         method: "POST",
         body: userData,
+      }),
+    }),
+    updateUser: builder.mutation<IUpdateUserResponse, IUpdateUserRequest>({
+      query: (userData) => ({
+        url: `auth/users`,
+        method: "PUT",
+        body: userData,
+      }),
+    }),
+    updateUserIntro: builder.mutation<
+      IUpdateUserIntroResponse,
+      IUpdateUserIntroRequest
+    >({
+      query: ({ introduction }) => ({
+        url: `/auth/users/intro`,
+        method: "PUT",
+        body: { introduction },
       }),
     }),
     getLoginCode: builder.mutation<IGetAuthCodeResponse, IGetAuthCodeRequest>({
@@ -75,9 +97,15 @@ export const cyfeedApi = createApi({
         method: "GET",
       }),
     }),
-    getUserById: builder.query<IGetUserByIdResponse, void>({
+    getUserById: builder.query<IGetUserByIdResponse, string>({
       query: (userId) => ({
         url: `/auth/users/id/${userId}`,
+        method: "GET",
+      }),
+    }),
+    getUserByUsername: builder.query<IGetUserByIdResponse, string>({
+      query: (username) => ({
+        url: `/auth/users/${username}`,
         method: "GET",
       }),
     }),
@@ -205,4 +233,8 @@ export const {
   useTagsQuery,
   useGetReactionsQuery,
   usePutReactionMutation,
+  useUpdateUserMutation,
+  useUpdateUserIntroMutation,
+  useGetUserByIdQuery,
+  useGetUserByUsernameQuery,
 } = cyfeedApi;

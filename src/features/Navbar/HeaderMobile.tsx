@@ -76,7 +76,7 @@ export const HeaderMobile = ({
 
             {isLoggedIn && (
               <>
-                <CustomNavLink to={`page/${user?.username}`} onClick={onClose}>
+                <CustomNavLink to={`profile/me`} onClick={onClose}>
                   <UnderlineText size="small" color="black">
                     Профиль
                   </UnderlineText>

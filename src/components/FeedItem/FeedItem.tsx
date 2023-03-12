@@ -7,6 +7,7 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { relativeTimeFromDates } from "../../utils/relativeTime";
+import { LinkText } from "../LinkText/LinkText";
 import { Reaction } from "../Reaction/Reaction";
 
 interface IFeedItemProps {
@@ -20,6 +21,9 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
   const handleTitleClick = useCallback(() => {
     navigate(`/post/${id}`);
   }, [id, navigate]);
+  const handleAuthorClick = useCallback(() => {
+    navigate(`/profile/${author}`);
+  }, [author, navigate]);
 
   const displayDate = relativeTimeFromDates(new Date(publishedAt));
 
@@ -32,9 +36,9 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
         <Text size="xsmall" color="text-xweak">
           {displayDate}
         </Text>
-        <Text size="xsmall" color="text-xweak">
+        <LinkText onClick={handleAuthorClick} size="xsmall" color="text-xweak">
           {author}
-        </Text>
+        </LinkText>
       </Box>
 
       <ReactionsBox direction="row" margin={{ top: "xsmall" }} wrap>

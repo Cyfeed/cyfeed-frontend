@@ -1,10 +1,10 @@
 import { Box, Button, Paragraph, Text } from "grommet";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import styled from "styled-components";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { IPostComment } from "../../api/types/getPostComments";
 import { selectCurrentUser } from "../../features/Login/authSlice";
+import { LinkText } from "../LinkText/LinkText";
 import { ReplyInput } from "../ReplyInput";
 
 type Props =
@@ -36,6 +36,7 @@ export const Comment = ({
   const { id = "" } = useParams();
   const navigate = useNavigate();
   const user = useSelector(selectCurrentUser);
+  const location = useLocation();
 
   const {
     author: { authorName, id: authorId, workPosition },
@@ -60,12 +61,10 @@ export const Comment = ({
     <>
       <Box>
         <LinkText
+          underline
           size="small"
           onClick={() =>
-            navigate(
-              authorId === user?.id ? `/profile/me` : `/profile/${authorId}`,
-              { replace: true }
-            )
+            navigate(`/profile/${authorName}`, { state: location })
           }
         >
           {authorName}
@@ -81,7 +80,7 @@ export const Comment = ({
             plain
             onClick={setAnswerActive}
             label={
-              <LinkText color="text-xweak" size="small">
+              <LinkText underline color="text-xweak" size="small">
                 Ответить
               </LinkText>
             }
@@ -94,8 +93,3 @@ export const Comment = ({
     </>
   );
 };
-
-const LinkText = styled(Text)`
-  text-decoration: underline;
-  cursor: pointer;
-`;

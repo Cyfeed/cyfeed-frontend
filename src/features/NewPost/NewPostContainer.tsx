@@ -1,5 +1,12 @@
-import { Box, Form, FormField, TextArea, TextInput } from "grommet";
-import { useCallback, useState } from "react";
+import {
+  Box,
+  Form,
+  FormField,
+  ResponsiveContext,
+  TextArea,
+  TextInput,
+} from "grommet";
+import { useCallback, useContext, useState } from "react";
 import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 
 import { useNavigate } from "react-router-dom";
@@ -7,7 +14,9 @@ import styled from "styled-components";
 import { useCreatePostMutation } from "../../api/cyfeedApi";
 import { EPostType } from "../../api/types/getFeed";
 import { ITagTransformed } from "../../api/types/getTags";
+import { Divider } from "../../components/Divider";
 import { AddTagContainer } from "../AddTag";
+import { Disclaimer } from "./Disclaimer";
 
 const DEFAULT_VALUE: INewPostValue = {
   link: undefined,
@@ -26,6 +35,8 @@ export const NewPostContainer = () => {
   const [selectedTags, setSelectedTags] = useState<ITagTransformed[]>([]);
   const [createPost, { isLoading }] = useCreatePostMutation();
   const navigate = useNavigate();
+  const size = useContext(ResponsiveContext);
+  const mobile = size === "xsmall";
 
   const handleSubmit = useCallback(
     async (post: INewPostValue) => {
@@ -46,6 +57,8 @@ export const NewPostContainer = () => {
 
   return (
     <Box width={{ max: "698px" }}>
+      <Disclaimer />
+      <Divider />
       <Form
         value={value}
         onChange={(nextValue, { touched }) => {
@@ -84,6 +97,8 @@ export const NewPostContainer = () => {
         </FormField>
 
         <CyButton
+          fill={mobile ? "horizontal" : false}
+          margin={{ top: "large" }}
           theme={EButtonTheme.White}
           primary
           loading={isLoading}

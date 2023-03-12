@@ -1,22 +1,7 @@
-export interface IGetUserByIdResponse {
-  details: {
-    joinedAt: string;
-    networks: [
-      {
-        link: string;
-        type: ENetworkType;
-      }
-    ];
-    position: string;
-    work: string;
-  };
-  email: string;
-  firstname: string;
-  id: string;
-  introduction: string;
-  lastname: string;
+import { IUser } from "./createUser";
+
+export interface IGetUserByIdResponse extends IUser {
   status: EStatus;
-  username: string;
 }
 
 export enum ENetworkType {
@@ -27,7 +12,7 @@ export enum ENetworkType {
   Facebook = "facebook",
 }
 
-enum EStatus {
+export enum EStatus {
   Active = "active",
   Pending = "pending",
   Decline = "decline",
