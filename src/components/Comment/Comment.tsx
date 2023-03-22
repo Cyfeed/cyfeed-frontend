@@ -37,7 +37,7 @@ export const Comment = ({
   const location = useLocation();
 
   const {
-    author: { authorName, id: workPosition },
+    author: { authorName, workPosition },
     text,
   } = comment;
   const answerActive = comment.id === activeReplyId;
