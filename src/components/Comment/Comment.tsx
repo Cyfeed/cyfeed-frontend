@@ -1,9 +1,7 @@
 import { Box, Button, Paragraph, Text } from "grommet";
 import { useCallback } from "react";
-import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { IPostComment } from "../../api/types/getPostComments";
-import { selectCurrentUser } from "../../features/Login/authSlice";
 import { LinkText } from "../LinkText/LinkText";
 import { ReplyInput } from "../ReplyInput";
 
@@ -35,11 +33,11 @@ export const Comment = ({
 }: Props) => {
   const { id = "" } = useParams();
   const navigate = useNavigate();
-  const user = useSelector(selectCurrentUser);
+
   const location = useLocation();
 
   const {
-    author: { authorName, id: authorId, workPosition },
+    author: { authorName, id: workPosition },
     text,
   } = comment;
   const answerActive = comment.id === activeReplyId;
