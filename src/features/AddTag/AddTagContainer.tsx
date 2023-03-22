@@ -60,6 +60,7 @@ export const AddTagContainer = ({ selectedTags, setSelectedTags }: Props) => {
     ({ suggestion }: { suggestion: any }) => {
       setSelectedTags([...selectedTags, suggestion]);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [selectedTags]
   );
 
