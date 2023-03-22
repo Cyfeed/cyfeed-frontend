@@ -28,7 +28,13 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
   const displayDate = relativeTimeFromDates(new Date(publishedAt));
 
   return (
-    <Box pad={{ vertical: "small", horizontal: "medium" }} gap="small">
+    <Box
+      round="4px"
+      margin={{ vertical: "6px" }}
+      pad={{ vertical: "small", horizontal: "medium" }}
+      gap="small"
+      background="#16171D"
+    >
       <Title onClick={handleTitleClick} size="medium" weight="bolder">
         {title}
       </Title>
