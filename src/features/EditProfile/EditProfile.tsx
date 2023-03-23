@@ -79,7 +79,7 @@ export const EditProfile = ({ profile }: IProps) => {
       ];
 
       const reqUser: IUpdateUserRequest = {
-        networks,
+        networks: networks.filter((n) => Boolean(n.link)),
         work: value.work,
         position: value.position,
       };
