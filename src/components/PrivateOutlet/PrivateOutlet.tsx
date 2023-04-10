@@ -15,14 +15,12 @@ export function PrivateOutlet() {
   const refreshToken = useSelector(selectRefreshToken);
 
   const { isFetching: userIsFetching } = cyfeedApi.endpoints.me.useQueryState();
-  const [, { isLoading: tokenIsFetching }] =
-    cyfeedApi.endpoints.refreshToken.useMutation();
 
   if (user) {
     return <Outlet />;
   }
 
-  if (userIsFetching || tokenIsFetching) {
+  if (userIsFetching) {
     return <div>LOADING</div>;
   }
 

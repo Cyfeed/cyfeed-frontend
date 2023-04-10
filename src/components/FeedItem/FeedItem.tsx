@@ -49,7 +49,7 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
 
       <ReactionsBox direction="row" margin={{ top: "xsmall" }} wrap>
         {post.reactions?.map((reaction) => (
-          <Reaction key={reaction.id} reaction={reaction} />
+          <Reaction postView={false} key={reaction.id} reaction={reaction} />
         ))}
         <Box
           width="fit-content"

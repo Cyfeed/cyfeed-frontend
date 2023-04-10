@@ -25,6 +25,37 @@ const initialState = {
   accessTokenExpiresAt: getToken(ACCESS_TOKEN_EXPIRES_AT) ?? null,
 };
 
+const saveCredentials = ({
+  accessToken,
+  refreshToken,
+  accessTokenExpiresAt,
+}: {
+  accessToken: string;
+  refreshToken: string;
+  accessTokenExpiresAt: string;
+}) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.setItem(ACCESS_TOKEN, JSON.stringify(accessToken));
+  window.localStorage.setItem(REFRESH_TOKEN, JSON.stringify(refreshToken));
+  window.localStorage.setItem(
+    ACCESS_TOKEN_EXPIRES_AT,
+    JSON.stringify(accessTokenExpiresAt)
+  );
+};
+
+const clearCredentials = () => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.removeItem(ACCESS_TOKEN);
+  window.localStorage.removeItem(REFRESH_TOKEN);
+  window.localStorage.removeItem(ACCESS_TOKEN_EXPIRES_AT);
+};
+
 export interface IAuthState {
   user: IGetUserByIdResponse | null;
   accessToken: string | null;
@@ -49,11 +80,22 @@ const slice = createSlice({
       state.accessToken = accessToken ?? null;
       state.refreshToken = refreshToken;
       state.accessTokenExpiresAt = accessTokenExpiresAt;
+
+      saveCredentials({ accessToken, refreshToken, accessTokenExpiresAt });
     },
     resetCredentials: (state) => {
       state.accessToken = null;
       state.refreshToken = null;
       state.accessTokenExpiresAt = null;
+
+      clearCredentials();
+    },
+
+    logout: (state) => {
+      state.accessToken = null;
+      state.refreshToken = null;
+      state.accessTokenExpiresAt = null;
+      state.user = null;
     },
 
     setUser: (
@@ -65,7 +107,8 @@ const slice = createSlice({
   },
 });
 
-export const { setCredentials, resetCredentials, setUser } = slice.actions;
+export const { setCredentials, resetCredentials, setUser, logout } =
+  slice.actions;
 
 export default slice.reducer;
 

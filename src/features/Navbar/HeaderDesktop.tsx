@@ -8,9 +8,11 @@ import { CustomNavLink } from "./Navbar";
 export const HeaderDesktop = ({
   user,
   userIsFetching,
+  onLogout,
 }: {
   user: IGetUserByIdResponse | null;
   userIsFetching: boolean;
+  onLogout(): void;
 }) => {
   const isLoggedIn = Boolean(user);
 

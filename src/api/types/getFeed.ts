@@ -34,6 +34,7 @@ export interface IPostReaction {
   id: string;
   imageURL: string;
   name: string;
+  reacted: boolean;
 }
 
 export enum EPostType {

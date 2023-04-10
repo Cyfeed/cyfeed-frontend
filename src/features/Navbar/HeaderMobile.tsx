@@ -1,4 +1,4 @@
-import { Box, DropButton, Text } from "grommet";
+import { Box, Button, DropButton, Text } from "grommet";
 import { Menu } from "grommet-icons";
 import { useState } from "react";
 import styled from "styled-components";
@@ -9,9 +9,11 @@ import { CustomNavLink } from "./Navbar";
 export const HeaderMobile = ({
   user,
   userIsFetching,
+  onLogout,
 }: {
   user: IGetUserByIdResponse | null;
   userIsFetching: boolean;
+  onLogout(): void;
 }) => {
   const isLoggedIn = Boolean(user);
   const [open, setOpen] = useState<boolean | undefined>();
@@ -82,14 +84,16 @@ export const HeaderMobile = ({
                   </UnderlineText>
                 </CustomNavLink>
 
-                <Text
-                  size="small"
-                  color="active"
+                <Button
+                  plain
                   margin={{ top: "small" }}
-                  onClick={onClose}
-                >
-                  Выйти
-                </Text>
+                  onClick={onLogout}
+                  label={
+                    <Text color="active" size="small">
+                      Выйти
+                    </Text>
+                  }
+                ></Button>
               </>
             )}
           </Box>

@@ -1,23 +1,19 @@
 import { Box, DropButton, Image, Text } from "grommet";
 import { useCallback, useState } from "react";
-import { useParams } from "react-router-dom";
+
 import styled from "styled-components";
-import {
-  useGetReactionsQuery,
-  usePutReactionMutation,
-} from "../../api/cyfeedApi";
+import { useGetReactionsQuery } from "../../api/cyfeedApi";
 import { IReaction, TGetReactionsResponse } from "../../api/types/getReactions";
 import { ReactionBox } from "../../components/Reaction";
+import { IPostReaction } from "../../api/types/getFeed";
 
 type Props = {
-  addReaction(newReaction: IReaction): void;
+  addReaction(reaction: IPostReaction): void;
 };
 
 export const AddReaction = ({ addReaction }: Props) => {
   const { data: reactions = [] } = useGetReactionsQuery();
   const [open, setOpen] = useState<boolean | undefined>();
-  const [putReaction] = usePutReactionMutation();
-  const { id: postId } = useParams();
 
   const onOpen = () => {
     setOpen(true);
@@ -27,17 +23,11 @@ export const AddReaction = ({ addReaction }: Props) => {
   };
 
   const handleClick = useCallback(
-    async (id: string) => {
-      if (postId) {
-        const newReaction = reactions.find((r) => r.id === id);
-        if (newReaction) {
-          addReaction(newReaction);
-        }
-        putReaction({ reactionId: id, postId });
-        onClose();
-      }
+    (reaction: IPostReaction) => {
+      addReaction(reaction);
+      onClose();
     },
-    [addReaction, postId, putReaction, reactions]
+    [addReaction]
   );
 
   return (
@@ -71,25 +61,29 @@ const ReactionsDrop = ({
   onClick,
 }: {
   reactions: TGetReactionsResponse;
-  onClick(id: string): void;
+  onClick(reaction: IReaction): void;
 }) => {
   return (
-    <Box
+    <ReactionsDropContainer
       direction="row"
-      pad="medium"
-      gap="medium"
+      pad="small"
       wrap
       background="background-contrast"
+      width={{ max: "128px" }}
     >
-      {reactions.map(({ id, imageURL }) => (
-        <ReactionButton key={id} onClick={() => onClick(id)}>
-          <Image width="20px" src={imageURL} />
+      {reactions.map((reaction) => (
+        <ReactionButton key={reaction.id} onClick={() => onClick(reaction)}>
+          <Image width="20px" src={reaction.imageURL} />
         </ReactionButton>
       ))}
-    </Box>
+    </ReactionsDropContainer>
   );
 };
 
 const ReactionButton = styled(Box)`
   cursor: pointer;
+`;
+
+const ReactionsDropContainer = styled(Box)`
+  gap: 12px;
 `;

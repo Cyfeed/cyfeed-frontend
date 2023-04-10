@@ -8,6 +8,8 @@ import { Reaction } from "../../components/Reaction/Reaction";
 import { HACKED_GREEN, UNIT_1, UNIT_2 } from "../../theme";
 import { relativeTimeFromDates } from "../../utils/relativeTime";
 import { AddReaction } from "../AddReaction";
+import { useParams } from "react-router-dom";
+import { usePutReactionMutation } from "../../api/cyfeedApi";
 
 interface IProps {
   post: IPostViewItem;
@@ -25,6 +27,8 @@ export const PostView = ({ post }: IProps) => {
   } = post;
 
   const [optimisticReactions, setOptimisticReactions] = useState(reactions);
+  const [putReaction] = usePutReactionMutation();
+  const { id: postId } = useParams();
 
   const addReactionOptimistically = useCallback(
     (newReaction: IReaction) => {
@@ -36,18 +40,31 @@ export const PostView = ({ post }: IProps) => {
         setOptimisticReactions(
           optimisticReactions.map((reaction) =>
             reaction.id === newReaction.id
-              ? { ...reaction, count: reaction.count + 1 }
+              ? { ...reaction, count: reaction.count + 1, reacted: true }
               : reaction
           )
         );
       } else {
         setOptimisticReactions([
           ...optimisticReactions,
-          { ...newReaction, count: 1 },
+          { ...newReaction, count: 1, reacted: true },
         ]);
       }
     },
     [optimisticReactions]
+  );
+
+  const handleReactionClick = useCallback(
+    async (newReaction: IReaction) => {
+      if (newReaction.reacted) {
+        return;
+      }
+      if (postId) {
+        addReactionOptimistically(newReaction);
+        putReaction({ reactionId: newReaction.id, postId });
+      }
+    },
+    [addReactionOptimistically, postId, putReaction]
   );
 
   const goTo = useCallback((url: string) => {
@@ -61,6 +78,9 @@ export const PostView = ({ post }: IProps) => {
           {author}
         </Text>
         <Text color="text-xweak" size="small">
+          &#9658;
+        </Text>
+        <Text color="text-xweak" size="small">
           {relativeTimeFromDates(new Date(publishedAt))}
         </Text>
       </Box>
@@ -68,12 +88,17 @@ export const PostView = ({ post }: IProps) => {
         {optimisticReactions.length !== 0 && (
           <Box gap="small" direction="row" wrap>
             {optimisticReactions?.map((reaction) => (
-              <Reaction reaction={reaction} key={reaction.id} />
+              <Reaction
+                reaction={reaction}
+                key={reaction.id}
+                addReaction={handleReactionClick}
+                postView
+              />
             ))}
           </Box>
         )}
 
-        <AddReaction addReaction={addReactionOptimistically} />
+        <AddReaction addReaction={handleReactionClick} />
       </ReactionsBox>
       {link ? (
         <LinkBox direction="row" margin={{ vertical: "medium" }} gap="small">

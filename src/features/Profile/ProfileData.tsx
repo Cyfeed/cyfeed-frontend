@@ -30,8 +30,8 @@ export const ProfileData = ({ data }: Props) => {
           <Text color="brand" size="small">
             - контакты:
           </Text>
-          {data.details.networks?.map((network) => {
-            return <TextKVPair k={network.type} v={network.link} />;
+          {data.details.networks?.map((network, idx) => {
+            return <TextKVPair key={idx} k={network.type} v={network.link} />;
           })}
         </Box>
       )}

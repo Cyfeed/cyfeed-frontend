@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { ICreatePostRequest, ICreatePostResponse } from "./types/createPost";
 import { ICreateUserRequest, ICreateUserResponse } from "./types/createUser";
 import { IGetAuthCodeRequest, IGetAuthCodeResponse } from "./types/getAuthCode";
@@ -14,7 +14,6 @@ import {
   IUpdateUserIntroResponse,
 } from "./types/updateUserIntro";
 
-import { RootState } from "../store";
 import {
   IGetPostCommentsRequest,
   IPostCommentParent,
@@ -26,19 +25,13 @@ import { IGetUserByIdResponse } from "./types/getUserById";
 import { IPostCommentRequest, IPostCommentResponse } from "./types/postComment";
 import { ISignInToWaitingListRequest } from "./types/signToWaitingList";
 import { IUpdateUserRequest, IUpdateUserResponse } from "./types/updateUser";
+import { isEqual } from "lodash-es";
+
+import { baseQueryWithReauth } from "./baseQuery";
 
 export const cyfeedApi = createApi({
   reducerPath: "cyfeedApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://api.cyfeed.co/api/",
-    prepareHeaders: (headers, { getState, endpoint }) => {
-      const token = (getState() as RootState).auth.accessToken;
-      if (token && endpoint !== "refreshToken") {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ["Post"],
   endpoints: (builder) => ({
     /**
@@ -82,15 +75,6 @@ export const cyfeedApi = createApi({
         body: loginData,
       }),
     }),
-    refreshToken: builder.mutation<ILoginResponse, string>({
-      query: (refreshToken) => ({
-        url: "/auth/token/refresh",
-        method: "POST",
-        headers: {
-          authorization: `Bearer ${refreshToken}`,
-        },
-      }),
-    }),
     me: builder.query<IGetUserByIdResponse, void>({
       query: () => ({
         url: "/auth/users/id/me",
@@ -112,7 +96,6 @@ export const cyfeedApi = createApi({
     /**
      * Communication
      */
-
     signToWaitingList: builder.mutation<void, ISignInToWaitingListRequest>({
       query: (email) => ({
         url: "/communication/email",
@@ -120,7 +103,6 @@ export const cyfeedApi = createApi({
         body: email,
       }),
     }),
-
     /**
      * CONTENT
      */
@@ -149,12 +131,13 @@ export const cyfeedApi = createApi({
       },
       // Refetch when the page arg changes
       forceRefetch({ currentArg, previousArg }) {
-        return currentArg !== previousArg;
+        return !isEqual(currentArg, previousArg);
       },
       transformResponse: (response: IGetFeedResponse, meta, arg) => {
         return { data: response, arg };
       },
     }),
+
     getPost: builder.query<IPostViewItem, IGetPostRequest>({
       query: ({ id }) => ({
         url: `/content/posts/${id}`,
@@ -227,7 +210,6 @@ export const {
   useGetPostQuery,
   useGetPostCommentsQuery,
   useLazyGetPostCommentsQuery,
-  useRefreshTokenMutation,
   useSignToWaitingListMutation,
   useLazySendPostCommentQuery,
   useTagsQuery,

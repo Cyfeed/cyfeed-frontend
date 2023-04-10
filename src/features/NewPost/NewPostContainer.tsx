@@ -44,6 +44,7 @@ export const NewPostContainer = () => {
 
       const { id } = await createPost({
         ...post,
+        link: post.link?.trim(),
         type,
         tagsIds: selectedTags.map((tag) => tag.value),
       }).unwrap();
