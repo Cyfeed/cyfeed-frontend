@@ -118,9 +118,9 @@ export const PostView = ({ post }: IProps) => {
       )}
 
       {text && (
-        <Markdown components={{ p: <Paragraph size="medium" fill /> }}>
+        <StyledMD components={{ p: <Paragraph size="medium" fill /> }}>
           {text}
-        </Markdown>
+        </StyledMD>
       )}
       <Box margin={{ top: "medium" }}>
         <Tags tags={tags} />
@@ -190,4 +190,8 @@ const LinkBox = styled(Box)`
 
 const ReactionsBox = styled(Box)`
   gap: ${UNIT_2};
+`;
+
+const StyledMD = styled(Markdown)`
+  word-break: break-word;
 `;
