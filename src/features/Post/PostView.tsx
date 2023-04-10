@@ -88,7 +88,10 @@ export const PostView = ({ post }: IProps) => {
 
   const handleReactionClick = useCallback(
     async (newReaction: IReaction) => {
-      if (newReaction.reacted) {
+      console.log("🚀 --- newReaction:", newReaction);
+      if (
+        optimisticReactions.find(({ id }) => id === newReaction.id)?.reacted
+      ) {
         return;
       }
       if (postId) {
@@ -96,7 +99,7 @@ export const PostView = ({ post }: IProps) => {
         putReaction({ reactionId: newReaction.id, postId });
       }
     },
-    [addReactionOptimistically, postId, putReaction]
+    [addReactionOptimistically, optimisticReactions, postId, putReaction]
   );
 
   const removeReactionClick = useCallback(
