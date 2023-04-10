@@ -196,6 +196,14 @@ export const cyfeedApi = createApi({
         url: `/reaction/${reactionId}/${postId}`,
       }),
     }),
+    removeReaction: builder.mutation<IPutReactionResponse, IPutReactionRequest>(
+      {
+        query: ({ reactionId, postId }) => ({
+          method: "DELETE",
+          url: `/reaction/${reactionId}/${postId}`,
+        }),
+      }
+    ),
   }),
 });
 
@@ -219,4 +227,5 @@ export const {
   useUpdateUserIntroMutation,
   useGetUserByIdQuery,
   useGetUserByUsernameQuery,
+  useRemoveReactionMutation,
 } = cyfeedApi;

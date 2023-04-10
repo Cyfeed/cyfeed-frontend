@@ -9,8 +9,11 @@ import { HACKED_GREEN, UNIT_1, UNIT_2 } from "../../theme";
 import { relativeTimeFromDates } from "../../utils/relativeTime";
 import { AddReaction } from "../AddReaction";
 import { useParams } from "react-router-dom";
-import { usePutReactionMutation } from "../../api/cyfeedApi";
-import { text } from "stream/consumers";
+import {
+  usePutReactionMutation,
+  useRemoveReactionMutation,
+} from "../../api/cyfeedApi";
+import { count } from "console";
 
 interface IProps {
   post: IPostViewItem;
@@ -29,6 +32,7 @@ export const PostView = ({ post }: IProps) => {
 
   const [optimisticReactions, setOptimisticReactions] = useState(reactions);
   const [putReaction] = usePutReactionMutation();
+  const [removeReaction] = useRemoveReactionMutation();
   const { id: postId } = useParams();
 
   const addReactionOptimistically = useCallback(
@@ -55,6 +59,33 @@ export const PostView = ({ post }: IProps) => {
     [optimisticReactions]
   );
 
+  const removeReactionOptimistically = useCallback(
+    (newReaction: IReaction) => {
+      const existingReactionIndex = optimisticReactions.findIndex(
+        ({ id }) => id === newReaction.id
+      );
+
+      if (existingReactionIndex !== -1) {
+        setOptimisticReactions(
+          optimisticReactions
+            .map((reaction) => {
+              if (reaction.id === newReaction.id) {
+                return {
+                  ...reaction,
+                  count: reaction.count - 1,
+                  reacted: false,
+                };
+              }
+
+              return reaction;
+            })
+            .filter((reaction) => reaction.count > 0)
+        );
+      }
+    },
+    [optimisticReactions]
+  );
+
   const handleReactionClick = useCallback(
     async (newReaction: IReaction) => {
       if (newReaction.reacted) {
@@ -66,6 +97,18 @@ export const PostView = ({ post }: IProps) => {
       }
     },
     [addReactionOptimistically, postId, putReaction]
+  );
+
+  const removeReactionClick = useCallback(
+    async (reaction: IReaction) => {
+      if (reaction.reacted) {
+        if (postId) {
+          removeReactionOptimistically(reaction);
+          removeReaction({ reactionId: reaction.id, postId });
+        }
+      }
+    },
+    [postId, removeReaction, removeReactionOptimistically]
   );
 
   const goTo = useCallback((url: string) => {
@@ -93,6 +136,7 @@ export const PostView = ({ post }: IProps) => {
                 reaction={reaction}
                 key={reaction.id}
                 addReaction={handleReactionClick}
+                removeReaction={removeReactionClick}
                 postView
               />
             ))}

@@ -1,23 +1,33 @@
 import { Box, Image, Text } from "grommet";
 import { IPostReaction } from "../../api/types/getFeed";
 import { UNIT_1 } from "../../theme";
+import { useCallback } from "react";
 
 export const Reaction = ({
   reaction,
   addReaction,
+  removeReaction,
   postView = false,
 }: {
   reaction: IPostReaction;
   addReaction?(reaction: IPostReaction): void;
+  removeReaction?(reaction: IPostReaction): void;
   postView?: boolean;
 }) => {
   const { count, imageURL, reacted } = reaction;
 
+  const handleClick = useCallback(() => {
+    if (reacted && removeReaction) {
+      return removeReaction(reaction);
+    }
+
+    if (addReaction) {
+      addReaction(reaction);
+    }
+  }, [addReaction, reacted, reaction, removeReaction]);
+
   return (
-    <ReactionBox
-      onClick={addReaction ? () => addReaction(reaction) : undefined}
-      reacted={postView && reacted}
-    >
+    <ReactionBox onClick={handleClick} reacted={postView && reacted}>
       <Box>
         <Image width="16px" src={imageURL} fit="cover" />
       </Box>
