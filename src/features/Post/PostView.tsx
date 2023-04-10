@@ -13,7 +13,6 @@ import {
   usePutReactionMutation,
   useRemoveReactionMutation,
 } from "../../api/cyfeedApi";
-import { count } from "console";
 
 interface IProps {
   post: IPostViewItem;
