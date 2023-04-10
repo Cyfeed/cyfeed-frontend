@@ -10,6 +10,7 @@ import { relativeTimeFromDates } from "../../utils/relativeTime";
 import { AddReaction } from "../AddReaction";
 import { useParams } from "react-router-dom";
 import { usePutReactionMutation } from "../../api/cyfeedApi";
+import { text } from "stream/consumers";
 
 interface IProps {
   post: IPostViewItem;
@@ -101,11 +102,16 @@ export const PostView = ({ post }: IProps) => {
         <AddReaction addReaction={handleReactionClick} />
       </ReactionsBox>
       {link ? (
-        <LinkBox direction="row" margin={{ vertical: "medium" }} gap="small">
+        <LinkBox
+          onClick={() => goTo(link)}
+          direction="column"
+          margin={{ vertical: "medium" }}
+          gap="small"
+        >
           <Heading margin="none" weight="normal" level={3}>
             {title}
           </Heading>
-          <Text onClick={() => goTo(link)} color="text-xweak" size="xsmall">
+          <Text color="text-xweak" size="xsmall">
             ({link})
           </Text>
         </LinkBox>
@@ -163,7 +169,7 @@ const Tag = ({
       gap="small"
       round={UNIT_1}
     >
-      <Text color="text-weak">{tag.name}</Text>
+      <Text color="text-weak">{`/${tag.name}`}</Text>
       {onRemove && (
         <Button
           plain

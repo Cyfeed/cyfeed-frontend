@@ -44,11 +44,10 @@ export const AddTagContainer = ({ selectedTags, setSelectedTags }: Props) => {
     setValue(nextValue);
     if (!nextValue) setInitSuggests(tags);
     else {
-      const regexp = new RegExp(`^${nextValue}`);
       setSuggestions(
         tags.filter(({ label, value }) => {
           return (
-            regexp.test(label) &&
+            label.toLowerCase().includes(nextValue.trim().toLowerCase()) &&
             selectedTags.findIndex((selectedTag) => selectedTag.value === value)
           );
         })
