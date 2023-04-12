@@ -119,12 +119,12 @@ export const PostView = ({ post }: IProps) => {
 
   return (
     <Box>
-      <Box direction="row" gap="medium">
+      <Box direction="row" gap="small">
         <Text color="white" size="small">
           {author}
         </Text>
         <Text color="text-xweak" size="small">
-          &#9658;
+          &#8227;
         </Text>
         <Text color="text-xweak" size="small">
           {relativeTimeFromDates(new Date(publishedAt))}
@@ -227,7 +227,7 @@ const Tag = ({
   );
 };
 
-const LinkBox = styled(Box)`
+export const LinkBox = styled(Box)`
   cursor: pointer;
   flex-shrink: 0;
   flex-wrap: wrap;

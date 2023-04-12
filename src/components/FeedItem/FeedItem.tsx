@@ -9,13 +9,16 @@ import styled from "styled-components";
 import { relativeTimeFromDates } from "../../utils/relativeTime";
 import { LinkText } from "../LinkText/LinkText";
 import { Reaction } from "../Reaction/Reaction";
+import { BottomCorner } from "grommet-icons";
+
+import { LinkBox } from "../../features/Post/PostView";
 
 interface IFeedItemProps {
   post: IPost;
 }
 
 export const FeedItem = ({ post }: IFeedItemProps) => {
-  const { title, publishedAt, author, id } = post;
+  const { title, publishedAt, author, id, link } = post;
   const navigate = useNavigate();
 
   const handleTitleClick = useCallback(() => {
@@ -27,20 +30,39 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
 
   const displayDate = relativeTimeFromDates(new Date(publishedAt));
 
+  const goTo = useCallback((url: string) => {
+    window.open(url, "_blank");
+  }, []);
+
   return (
     <Box
       round="4px"
       margin={{ vertical: "6px" }}
       pad={{ vertical: "small", horizontal: "medium" }}
-      gap="small"
+      gap="6px"
       background="#16171D"
     >
       <Title onClick={handleTitleClick} size="medium" weight="bolder">
         {title}
       </Title>
-      <Box direction="row" gap="medium">
+      {link && (
+        <LinkBox onClick={() => goTo(link)} direction="row" gap="2px">
+          <Text color="text-xweak" size="xsmall">
+            {new URL(link).host}
+          </Text>
+          <BottomCorner
+            style={{ transform: "rotate(-90deg)" }}
+            size="10px"
+            color="brand"
+          />
+        </LinkBox>
+      )}
+      <Box direction="row" gap="small">
         <Text size="xsmall" color="text-xweak">
           {displayDate}
+        </Text>
+        <Text color="text-xweak" size="small">
+          &#8227;
         </Text>
         <LinkText onClick={handleAuthorClick} size="xsmall" color="text-xweak">
           {author}

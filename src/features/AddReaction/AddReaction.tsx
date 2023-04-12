@@ -45,9 +45,9 @@ export const AddReaction = ({ addReaction }: Props) => {
         onClose={onClose}
         dropProps={{
           elevation: "none",
-          margin: { top: "4px", left: "6px" },
+          margin: { top: "10px", left: "-6px" },
         }}
-        dropAlign={{ left: "right", top: "bottom" }}
+        dropAlign={{ left: "left", top: "bottom" }}
         dropContent={
           <ReactionsDrop reactions={reactions} onClick={handleClick} />
         }
@@ -66,10 +66,11 @@ const ReactionsDrop = ({
   return (
     <ReactionsDropContainer
       direction="row"
-      pad="small"
+      pad="8px"
       wrap
       background="background-contrast"
-      width={{ max: "128px" }}
+      round="4px"
+      width={{ max: "132px" }}
     >
       {reactions.map((reaction) => (
         <ReactionButton key={reaction.id} onClick={() => onClick(reaction)}>

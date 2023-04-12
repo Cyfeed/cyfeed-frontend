@@ -1,6 +1,13 @@
-import { Box } from "grommet";
-import React from "react";
+import { Box, ResponsiveContext } from "grommet";
+import React, { useContext } from "react";
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
-  return <Box pad={{ horizontal: "large", vertical: "large" }}>{children}</Box>;
+  const size = useContext(ResponsiveContext);
+  const mobile = size === "small" || size === "xsmall";
+
+  return (
+    <Box pad={{ horizontal: mobile ? "16px" : "large", vertical: "large" }}>
+      {children}
+    </Box>
+  );
 };
