@@ -149,6 +149,7 @@ export const PostView = ({ post }: IProps) => {
       </ReactionsBox>
       {link ? (
         <LinkBox
+          focusIndicator={false}
           onClick={() => goTo(link)}
           direction="column"
           margin={{ vertical: "medium" }}

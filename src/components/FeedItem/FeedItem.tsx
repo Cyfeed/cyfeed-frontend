@@ -46,7 +46,12 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
         {title}
       </Title>
       {link && (
-        <LinkBox onClick={() => goTo(link)} direction="row" gap="2px">
+        <LinkBox
+          focusIndicator={false}
+          onClick={() => goTo(link)}
+          direction="row"
+          gap="2px"
+        >
           <Text color="text-xweak" size="xsmall">
             {new URL(link).host}
           </Text>
