@@ -70,7 +70,7 @@ function App() {
   useAuth();
 
   return (
-    <Grommet theme={theme} background="black" full>
+    <Grommet theme={theme} background="black" full="min">
       <RouterProvider router={router} />
     </Grommet>
   );
