@@ -33,8 +33,9 @@ export const postApi = (
   editPost: builder.mutation<IPostViewItem, IGetPostRequest>({
     query: ({ id }) => ({
       url: `/content/posts/${id}`,
-      method: "UPDATE",
+      method: "PUT",
     }),
+    invalidatesTags: ["Post"],
   }),
   createPost: builder.mutation<ICreatePostResponse, ICreatePostRequest>({
     query: (post) => ({

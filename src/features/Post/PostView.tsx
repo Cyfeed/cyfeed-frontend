@@ -18,6 +18,7 @@ import { relativeTimeFromDates } from "../../utils/relativeTime";
 import { AddReaction } from "../AddReaction";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
+  useDeletePostMutation,
   usePutReactionMutation,
   useRemoveReactionMutation,
 } from "../../api/cyfeedApi";
@@ -33,6 +34,7 @@ interface IProps {
 
 export const PostView = ({ post }: IProps) => {
   const {
+    id,
     title,
     author,
     link,
@@ -47,6 +49,16 @@ export const PostView = ({ post }: IProps) => {
 
   const [optimisticReactions, setOptimisticReactions] = useState(reactions);
   const [removeModalOpen, setRemoveModalOpen] = useState(false);
+  const [deletePost, { isError, isLoading }] = useDeletePostMutation();
+
+  const handleDeletePost = useCallback(async () => {
+    await deletePost({ id })
+      .unwrap()
+      .then(() => {
+        setRemoveModalOpen(false);
+        navigate("/");
+      });
+  }, [deletePost, id, navigate]);
 
   const onClose = () => setRemoveModalOpen(false);
 
@@ -110,7 +122,6 @@ export const PostView = ({ post }: IProps) => {
 
   const handleReactionClick = useCallback(
     async (newReaction: IReaction) => {
-      console.log("🚀 --- newReaction:", newReaction);
       if (
         optimisticReactions.find(({ id }) => id === newReaction.id)?.reacted
       ) {
@@ -176,7 +187,11 @@ export const PostView = ({ post }: IProps) => {
 
         {isMyPost && (
           <Box direction="row" gap="4px">
-            <LabelButton justify="center" color="background-contrast">
+            <LabelButton
+              onClick={() => navigate(`/edit-post/${id}`)}
+              justify="center"
+              color="background-contrast"
+            >
               <Text color="text-weak" size="xsmall">
                 Редактировать
               </Text>
@@ -230,6 +245,7 @@ export const PostView = ({ post }: IProps) => {
         <Layer
           id="hello world"
           position="center"
+          animate={false}
           onClickOutside={onClose}
           onEsc={onClose}
           background="background-contrast"
@@ -239,6 +255,7 @@ export const PostView = ({ post }: IProps) => {
               Удалить пост
             </Heading>
             <Text>Вы точно хотите удалить пост?</Text>
+            {isError && <Text color="status-error">Не получилось удалить</Text>}
             <Box
               as="footer"
               gap="small"
@@ -263,8 +280,10 @@ export const PostView = ({ post }: IProps) => {
                     Удалить
                   </Text>
                 }
+                loading={isLoading}
+                disabled={isLoading}
                 size="small"
-                onClick={onClose}
+                onClick={handleDeletePost}
                 theme={EButtonTheme.White}
                 primary
               />
@@ -283,12 +302,16 @@ export const Tags = ({
   tags: IPostTag[];
   onRemove?(id: string): void;
 }) => {
+  if (!tags.length) {
+    return null;
+  }
+
   return (
-    <Box direction="row" wrap gap="small">
-      {tags.map((tag) => (
-        <Tag key={tag.id} tag={tag} onRemove={onRemove} />
+    <TagsBox direction="row" wrap>
+      {tags.map((tag, idx) => (
+        <Tag key={tag.id || idx} tag={tag} onRemove={onRemove} />
       ))}
-    </Box>
+    </TagsBox>
   );
 };
 
@@ -348,4 +371,8 @@ const LabelButton = styled(Box)`
   &:hover {
     background-color: ${HACKED_GREY};
   }
+`;
+
+const TagsBox = styled(Box)`
+  gap: 8px;
 `;

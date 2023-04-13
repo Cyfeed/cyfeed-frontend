@@ -13,13 +13,14 @@ import { FeedContainer } from "./features/Feed";
 import { JoinContainer } from "./features/Join";
 import { LoginContainer } from "./features/Login";
 import { Navbar } from "./features/Navbar";
-import { NewPostContainer } from "./features/NewPost";
 import { PostContainer } from "./features/Post/PostContainer";
 import { ProfileMe, ProfileOutlet } from "./features/Profile";
 import { Layout } from "./Layout";
 import { theme } from "./theme";
 import { useAuth } from "./utils/useAuth";
 import { Footer } from "./components/Footer";
+import { EditPost } from "./features/EditPost";
+import { NewPostContainer } from "./features/NewPost";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -58,6 +59,9 @@ const router = createBrowserRouter(
             <Route path=":username" element={<ProfileOutlet />} />
           </Route>
           <Route path="new-post" element={<NewPostContainer />} />
+          <Route path="edit-post">
+            <Route path=":id" element={<EditPost />} />
+          </Route>
           <Route
             path="*"
             element={

@@ -4,7 +4,7 @@ import {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/dist/query";
 import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
-import { TGetTagsResponseTransformed, IGetTagsResponse } from "./types/getTags";
+import { IGetTagsResponse } from "./types/getTags";
 
 export const tagsApi = (
   builder: EndpointBuilder<
@@ -13,12 +13,12 @@ export const tagsApi = (
     "cyfeedApi"
   >
 ) => ({
-  tags: builder.query<TGetTagsResponseTransformed, void>({
+  tags: builder.query<IGetTagsResponse, void>({
     query: () => ({
       url: "/tags",
       method: "GET",
     }),
-    transformResponse: (response: IGetTagsResponse) =>
-      response.map((tag) => ({ label: tag.name, value: tag.id })),
+    // transformResponse: (response: IGetTagsResponse) =>
+    //   response.map((tag) => ({ label: tag.name, value: tag.id })),
   }),
 });

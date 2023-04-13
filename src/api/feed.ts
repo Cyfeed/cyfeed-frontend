@@ -4,7 +4,7 @@ import {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/dist/query";
 import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
-import { isEqual } from "lodash-es";
+
 import { IGetFeedResponse, IGetFeedRequest } from "./types/getFeed";
 
 export const feedApi = (
@@ -29,17 +29,20 @@ export const feedApi = (
     },
     // Always merge incoming data to the cache entry
     merge: (currentCache, newItems) => {
-      if (currentCache.arg.type !== newItems.arg.type) {
-        return newItems;
-      }
+      return newItems;
 
-      currentCache.data.posts?.push(...newItems.data.posts);
-      currentCache.data.paging = newItems.data.paging;
-      currentCache.arg = newItems.arg;
+      // if (currentCache.arg.type !== newItems.arg.type) {
+      //   return newItems;
+      // }
+
+      // currentCache.data.posts?.push(...newItems.data.posts);
+      // currentCache.data.paging = newItems.data.paging;
+      // currentCache.arg = newItems.arg;
     },
     // Refetch when the page arg changes
     forceRefetch({ currentArg, previousArg }) {
-      return !isEqual(currentArg, previousArg);
+      return true;
+      // return !isEqual(currentArg, previousArg);
     },
     transformResponse: (response: IGetFeedResponse, meta, arg) => {
       return { data: response, arg };
