@@ -6,6 +6,7 @@ import {
   selectCurrentUser,
   selectRefreshToken,
 } from "../../features/Login/authSlice";
+import { Page } from "grommet";
 
 export function PrivateOutlet() {
   const location = useLocation();
@@ -21,7 +22,7 @@ export function PrivateOutlet() {
   }
 
   if (userIsFetching) {
-    return <div>LOADING</div>;
+    return <Page>LOADING</Page>;
   }
 
   if (!user && !accessToken && !refreshToken) {

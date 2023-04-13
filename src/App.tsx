@@ -1,4 +1,4 @@
-import { Grommet } from "grommet";
+import { Box, Grommet } from "grommet";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -19,6 +19,7 @@ import { ProfileMe, ProfileOutlet } from "./features/Profile";
 import { Layout } from "./Layout";
 import { theme } from "./theme";
 import { useAuth } from "./utils/useAuth";
+import { Footer } from "./components/Footer";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,12 +27,18 @@ const router = createBrowserRouter(
       <Route
         path="/"
         element={
-          <>
+          <Box
+            height={{ min: "100vh" }}
+            direction="column"
+            fill="vertical"
+            justify="between"
+          >
             <Navbar />
             <Layout>
               <Outlet />
             </Layout>
-          </>
+            <Footer />
+          </Box>
         }
       >
         <Route path="/" element={<PrivateOutlet />}>

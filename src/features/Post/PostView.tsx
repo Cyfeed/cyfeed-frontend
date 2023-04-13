@@ -1,18 +1,31 @@
-import { Box, Button, Heading, Markdown, Paragraph, Text } from "grommet";
+import {
+  Box,
+  Button,
+  Heading,
+  Markdown,
+  Paragraph,
+  Text,
+  Layer,
+} from "grommet";
 import { Close } from "grommet-icons";
 import { useCallback, useState } from "react";
 import styled from "styled-components";
 import { IPostTag, IPostViewItem } from "../../api/types/getFeed";
 import { IReaction } from "../../api/types/getReactions";
 import { Reaction } from "../../components/Reaction/Reaction";
-import { HACKED_GREEN, UNIT_1, UNIT_2 } from "../../theme";
+import { HACKED_GREY, HACKED_GREEN, UNIT_1 } from "../../theme";
 import { relativeTimeFromDates } from "../../utils/relativeTime";
 import { AddReaction } from "../AddReaction";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   usePutReactionMutation,
   useRemoveReactionMutation,
 } from "../../api/cyfeedApi";
+import { selectCurrentUser } from "../Login/authSlice";
+import { useSelector } from "react-redux";
+import { HACKED_DARK_GREY } from "../../theme";
+import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
+import { LinkText } from "../../components/LinkText/LinkText";
 
 interface IProps {
   post: IPostViewItem;
@@ -29,10 +42,20 @@ export const PostView = ({ post }: IProps) => {
     reactions = [],
   } = post;
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [optimisticReactions, setOptimisticReactions] = useState(reactions);
+  const [removeModalOpen, setRemoveModalOpen] = useState(false);
+
+  const onClose = () => setRemoveModalOpen(false);
+
   const [putReaction] = usePutReactionMutation();
   const [removeReaction] = useRemoveReactionMutation();
   const { id: postId } = useParams();
+
+  const me = useSelector(selectCurrentUser);
+  const isMyPost = me?.username === author;
 
   const addReactionOptimistically = useCallback(
     (newReaction: IReaction) => {
@@ -120,9 +143,13 @@ export const PostView = ({ post }: IProps) => {
   return (
     <Box>
       <Box direction="row" gap="small">
-        <Text color="white" size="small">
+        <LinkText
+          underline={false}
+          size="small"
+          onClick={() => navigate(`/profile/${author}`, { state: location })}
+        >
           {author}
-        </Text>
+        </LinkText>
         <Text color="text-xweak" size="small">
           &#8227;
         </Text>
@@ -130,9 +157,9 @@ export const PostView = ({ post }: IProps) => {
           {relativeTimeFromDates(new Date(publishedAt))}
         </Text>
       </Box>
-      <ReactionsBox direction="row" margin={{ top: "small" }}>
+      <Box direction="row" margin={{ top: "small" }} gap="4px" height="24px">
         {optimisticReactions.length !== 0 && (
-          <Box gap="small" direction="row" wrap>
+          <Box direction="row" wrap gap="4px">
             {optimisticReactions?.map((reaction) => (
               <Reaction
                 reaction={reaction}
@@ -146,7 +173,27 @@ export const PostView = ({ post }: IProps) => {
         )}
 
         <AddReaction addReaction={handleReactionClick} />
-      </ReactionsBox>
+
+        {isMyPost && (
+          <Box direction="row" gap="4px">
+            <LabelButton justify="center" color="background-contrast">
+              <Text color="text-weak" size="xsmall">
+                Редактировать
+              </Text>
+            </LabelButton>
+            <LabelButton
+              focusIndicator={false}
+              onClick={() => setRemoveModalOpen(true)}
+              justify="center"
+              color="background-contrast"
+            >
+              <Text color="text-weak" size="xsmall">
+                Удалить
+              </Text>
+            </LabelButton>
+          </Box>
+        )}
+      </Box>
       {link ? (
         <LinkBox
           focusIndicator={false}
@@ -159,7 +206,7 @@ export const PostView = ({ post }: IProps) => {
             {title}
           </Heading>
           <Text color="text-xweak" size="xsmall">
-            ({link})
+            {new URL(link).host}
           </Text>
         </LinkBox>
       ) : (
@@ -178,6 +225,53 @@ export const PostView = ({ post }: IProps) => {
       <Box margin={{ top: "medium" }}>
         <Tags tags={tags} />
       </Box>
+
+      {removeModalOpen && (
+        <Layer
+          id="hello world"
+          position="center"
+          onClickOutside={onClose}
+          onEsc={onClose}
+          background="background-contrast"
+        >
+          <Box pad="medium" gap="small" width="medium">
+            <Heading level={3} margin="none">
+              Удалить пост
+            </Heading>
+            <Text>Вы точно хотите удалить пост?</Text>
+            <Box
+              as="footer"
+              gap="small"
+              direction="row"
+              align="center"
+              justify="end"
+              pad={{ top: "medium", bottom: "small" }}
+            >
+              <CyButton
+                label={
+                  <Text size="small" color="white">
+                    Отменить
+                  </Text>
+                }
+                onClick={onClose}
+                color="dark-3"
+                size="small"
+              />
+              <CyButton
+                label={
+                  <Text size="small" color="black">
+                    Удалить
+                  </Text>
+                }
+                size="small"
+                onClick={onClose}
+                theme={EButtonTheme.White}
+                primary
+              />
+            </Box>
+          </Box>
+        </Layer>
+      )}
     </Box>
   );
 };
@@ -241,10 +335,17 @@ export const LinkBox = styled(Box)`
   }
 `;
 
-const ReactionsBox = styled(Box)`
-  gap: ${UNIT_2};
-`;
-
 const StyledMD = styled(Markdown)`
   word-break: break-word;
+`;
+
+const LabelButton = styled(Box)`
+  background-color: ${HACKED_DARK_GREY};
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${HACKED_GREY};
+  }
 `;

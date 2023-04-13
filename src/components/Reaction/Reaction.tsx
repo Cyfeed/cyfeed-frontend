@@ -1,6 +1,6 @@
 import { Box, Image, Text } from "grommet";
 import { IPostReaction } from "../../api/types/getFeed";
-import { UNIT_1 } from "../../theme";
+import { HACKED_STROKE, UNIT_1 } from "../../theme";
 import { useCallback } from "react";
 
 export const Reaction = ({
@@ -49,23 +49,16 @@ export const ReactionBox = ({
 }) => {
   return (
     <Box
+      focusIndicator={false}
       onClick={onClick}
       width="fit-content"
       align="center"
       justify="start"
-      pad={{ vertical: "4px", horizontal: "6px" }}
-      background="background-contrast"
+      pad={{ vertical: "2px", horizontal: "6px" }}
+      background={reacted ? HACKED_STROKE : "background-contrast"}
       direction="row"
       gap="8px"
       round={UNIT_1}
-      border={
-        reacted
-          ? {
-              color: "text-xweak",
-              size: "1px",
-            }
-          : undefined
-      }
     >
       {children}
     </Box>

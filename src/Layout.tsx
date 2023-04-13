@@ -6,7 +6,11 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   const mobile = size === "small" || size === "xsmall";
 
   return (
-    <Box pad={{ horizontal: mobile ? "16px" : "large", vertical: "large" }}>
+    <Box
+      flex="grow"
+      fill="vertical"
+      pad={{ horizontal: mobile ? "16px" : "large", vertical: "large" }}
+    >
       {children}
     </Box>
   );

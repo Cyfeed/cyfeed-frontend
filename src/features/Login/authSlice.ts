@@ -96,6 +96,8 @@ const slice = createSlice({
       state.refreshToken = null;
       state.accessTokenExpiresAt = null;
       state.user = null;
+
+      clearCredentials();
     },
 
     setUser: (

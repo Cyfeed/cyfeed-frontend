@@ -42,7 +42,7 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
       gap="6px"
       background="#16171D"
     >
-      <Title onClick={handleTitleClick} size="medium" weight="bolder">
+      <Title onClick={handleTitleClick} size="medium" weight={500}>
         {title}
       </Title>
       {link && (

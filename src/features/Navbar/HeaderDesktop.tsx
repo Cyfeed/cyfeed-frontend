@@ -21,6 +21,7 @@ export const HeaderDesktop = ({
       <Logo />
       <Box fill="horizontal" direction="row" justify="between">
         <Box direction="row" gap="small">
+          <Text color="text-xweak">{"* * *"}</Text>
           <CustomNavLink to="/">
             {({ isActive }) => (
               <Text size="small" color={isActive ? "brand" : "white"}>
@@ -28,6 +29,9 @@ export const HeaderDesktop = ({
               </Text>
             )}
           </CustomNavLink>
+          <Text alignSelf="center" color="text-xweak" size="small">
+            &#8227;
+          </Text>
           <CustomNavLink to="about">
             {({ isActive }) => (
               <Text size="small" color={isActive ? "brand" : "white"}>
@@ -35,12 +39,15 @@ export const HeaderDesktop = ({
               </Text>
             )}
           </CustomNavLink>
+          <Text color="text-xweak">{"* * *"}</Text>
           {isLoggedIn && (
             <CustomNavLink to="new-post">
               {({ isActive }) => (
-                <Text size="small" color={isActive ? "brand" : "white"}>
-                  [+][НАПИСАТЬ]
-                </Text>
+                <>
+                  <Text size="small" color={isActive ? "brand" : "white"}>
+                    [+][НАПИСАТЬ]
+                  </Text>
+                </>
               )}
             </CustomNavLink>
           )}

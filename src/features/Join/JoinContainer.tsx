@@ -138,6 +138,7 @@ export const JoinContainer = () => {
           <FormField
             label="Расскажите немного о себе"
             name="introduction"
+            required
             width={"100%"}
           >
             <TextArea
