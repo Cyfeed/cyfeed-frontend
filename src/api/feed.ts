@@ -10,7 +10,7 @@ import { IGetFeedResponse, IGetFeedRequest } from "./types/getFeed";
 export const feedApi = (
   builder: EndpointBuilder<
     BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
-    "Post",
+    "Post" | "Posts",
     "cyfeedApi"
   >
 ) => ({
@@ -22,7 +22,7 @@ export const feedApi = (
       url: `/content/feed?type=${type}&index=${index}&size=${size}`,
       method: "GET",
     }),
-    providesTags: ["Post"],
+    providesTags: ["Posts"],
     // Only have one cache entry because the arg always maps to one string
     serializeQueryArgs: ({ endpointName }) => {
       return endpointName;

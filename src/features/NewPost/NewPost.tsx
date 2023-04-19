@@ -89,7 +89,7 @@ export const NewPost = ({
       }
 
       if (mode === "edit" && postId) {
-        await updatePost({ ...data, id: postId })
+        await updatePost({ post: { ...data }, id: postId })
           .unwrap()
           .then(() => {
             navigate(`/post/${postId}`);

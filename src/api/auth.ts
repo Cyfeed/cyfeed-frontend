@@ -17,7 +17,7 @@ import {
 export const authApi = (
   builder: EndpointBuilder<
     BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
-    "Post",
+    "Post" | "Posts",
     "cyfeedApi"
   >
 ) => ({

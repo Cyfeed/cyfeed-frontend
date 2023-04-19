@@ -12,7 +12,7 @@ import { reactionsApi } from "./reactions";
 export const cyfeedApi = createApi({
   reducerPath: "cyfeedApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Post"],
+  tagTypes: ["Post", "Posts"],
   endpoints: (builder) => ({
     ...authApi(builder),
     ...communicationApi(builder),

@@ -10,7 +10,7 @@ import { IPutReactionResponse, IPutReactionRequest } from "./types/putReaction";
 export const reactionsApi = (
   builder: EndpointBuilder<
     BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
-    "Post",
+    "Post" | "Posts",
     "cyfeedApi"
   >
 ) => ({

@@ -9,7 +9,7 @@ import { IGetTagsResponse } from "./types/getTags";
 export const tagsApi = (
   builder: EndpointBuilder<
     BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
-    "Post",
+    "Post" | "Posts",
     "cyfeedApi"
   >
 ) => ({

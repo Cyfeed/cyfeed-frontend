@@ -9,7 +9,7 @@ import { ISignInToWaitingListRequest } from "./types/signToWaitingList";
 export const communicationApi = (
   builder: EndpointBuilder<
     BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
-    "Post",
+    "Post" | "Posts",
     "cyfeedApi"
   >
 ) => ({

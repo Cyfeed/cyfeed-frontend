@@ -13,7 +13,7 @@ import { IPostCommentResponse, IPostCommentRequest } from "./types/postComment";
 export const commentsApi = (
   builder: EndpointBuilder<
     BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
-    "Post",
+    "Post" | "Posts",
     "cyfeedApi"
   >
 ) => ({
