@@ -168,9 +168,10 @@ export const PostView = ({ post }: IProps) => {
           {relativeTimeFromDates(new Date(publishedAt))}
         </Text>
       </Box>
-      <Box direction="row" margin={{ top: "small" }} gap="4px" height="24px">
+      <Reactions direction="row" margin={{ top: "small" }}>
         {optimisticReactions.length !== 0 && (
-          <Box direction="row" wrap gap="4px">
+          // <Box direction="row" wrap>
+          <>
             {optimisticReactions?.map((reaction) => (
               <Reaction
                 reaction={reaction}
@@ -180,7 +181,8 @@ export const PostView = ({ post }: IProps) => {
                 postView
               />
             ))}
-          </Box>
+          </>
+          // </Box>
         )}
 
         <AddReaction addReaction={handleReactionClick} />
@@ -208,7 +210,7 @@ export const PostView = ({ post }: IProps) => {
             </LabelButton>
           </Box>
         )}
-      </Box>
+      </Reactions>
       {link ? (
         <LinkBox
           focusIndicator={false}
@@ -375,4 +377,9 @@ const LabelButton = styled(Box)`
 
 const TagsBox = styled(Box)`
   gap: 8px;
+`;
+
+const Reactions = styled(Box)`
+  gap: 4px;
+  flex-wrap: wrap;
 `;
