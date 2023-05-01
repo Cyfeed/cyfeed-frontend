@@ -242,6 +242,11 @@ export const PostView = ({ post }: IProps) => {
           components={{
             p: <Paragraph size="medium" fill />,
             img: <Image fit="cover" style={{ maxWidth: "100%" }} />,
+            blockquote: (
+              <blockquote
+                style={{ borderLeft: "1px solid white", paddingLeft: "12px" }}
+              />
+            ),
           }}
         >
           {text}
