@@ -21,7 +21,6 @@ import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 import { LinkText } from "../../components/LinkText/LinkText";
 import { Tags } from "./Tags";
 import { BottomCorner } from "grommet-icons";
-import { isError } from "lodash-es";
 
 interface IProps {
   post: IPostViewItem;
