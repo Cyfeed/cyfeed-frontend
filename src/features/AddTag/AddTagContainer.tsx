@@ -49,7 +49,7 @@ export const AddTagContainer = ({
         tagsSource.filter(({ name, id }) => {
           return (
             name.toLowerCase().includes(nextValue.trim().toLowerCase()) &&
-            selectedTags.has(id)
+            !selectedTags.has(id)
           );
         })
       );
