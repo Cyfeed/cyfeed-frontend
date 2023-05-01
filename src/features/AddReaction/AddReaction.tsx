@@ -6,6 +6,7 @@ import { useGetReactionsQuery } from "../../api/cyfeedApi";
 import { IReaction, TGetReactionsResponse } from "../../api/types/getReactions";
 import { ReactionBox } from "../../components/Reaction";
 import { IPostReaction } from "../../api/types/getFeed";
+import { HACKED_STROKE } from "../../theme";
 
 type Props = {
   addReaction(reaction: IPostReaction): void;

@@ -1,5 +1,5 @@
 import { Box, Button, Text } from "grommet";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout, selectCurrentUser } from "../Login/authSlice";
 import { ProfileData } from "./ProfileData";
@@ -9,13 +9,14 @@ import { useCallback } from "react";
 type IProps = {};
 
 export const ProfileMe = (props: IProps) => {
+  const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const navigate = useNavigate();
 
   const handleLogout = useCallback(() => {
-    logout();
-    navigate("login", { replace: true });
-  }, [navigate]);
+    dispatch(logout());
+    navigate("/login", { replace: true });
+  }, [dispatch, navigate]);
 
   if (!user) {
     return null;

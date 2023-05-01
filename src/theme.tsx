@@ -24,6 +24,12 @@ export const UNIT_9 = "48px";
 
 export const theme: ThemeType = {
   global: {
+    focus: {
+      outline: {
+        // color: "transparent",
+        size: "1px",
+      },
+    },
     input: { font: { weight: "normal", size: "16px" } },
     breakpoints: {
       xsmall: {

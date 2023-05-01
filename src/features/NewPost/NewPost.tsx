@@ -137,7 +137,7 @@ export const NewPost = ({
             size="small"
             name="text"
             fill
-            resize={false}
+            resize={"vertical"}
             rows={6}
           />
         </FormField>

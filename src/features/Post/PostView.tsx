@@ -1,4 +1,4 @@
-import { Box, Heading, Markdown, Paragraph, Text, Layer } from "grommet";
+import { Box, Heading, Markdown, Paragraph, Text, Layer, Image } from "grommet";
 
 import { useCallback, useState } from "react";
 import styled from "styled-components";
@@ -20,6 +20,7 @@ import { HACKED_DARK_GREY } from "../../theme";
 import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 import { LinkText } from "../../components/LinkText/LinkText";
 import { Tags } from "./Tags";
+import { BottomCorner } from "grommet-icons";
 
 interface IProps {
   post: IPostViewItem;
@@ -163,7 +164,6 @@ export const PostView = ({ post }: IProps) => {
       </Box>
       <Reactions direction="row" margin={{ top: "small" }}>
         {optimisticReactions.length !== 0 && (
-          // <Box direction="row" wrap>
           <>
             {optimisticReactions?.map((reaction) => (
               <Reaction
@@ -175,7 +175,6 @@ export const PostView = ({ post }: IProps) => {
               />
             ))}
           </>
-          // </Box>
         )}
 
         <AddReaction addReaction={handleReactionClick} />
@@ -205,20 +204,31 @@ export const PostView = ({ post }: IProps) => {
         )}
       </Reactions>
       {link ? (
-        <LinkBox
-          focusIndicator={false}
-          onClick={() => goTo(link)}
-          direction="column"
-          margin={{ vertical: "medium" }}
-          gap="small"
-        >
-          <Heading margin="none" weight="normal" level={3}>
+        <>
+          <Heading
+            margin={{ top: "medium", bottom: "small" }}
+            weight="normal"
+            level={3}
+          >
             {title}
           </Heading>
-          <Text color="text-xweak" size="xsmall">
-            {new URL(link).host}
-          </Text>
-        </LinkBox>
+          <LinkBox
+            margin={{ bottom: "medium" }}
+            focusIndicator={false}
+            onClick={() => goTo(link)}
+            direction="row"
+            gap="small"
+          >
+            <Text color="text-xweak" size="xsmall">
+              {new URL(link).host}
+            </Text>
+            <BottomCorner
+              style={{ transform: "rotate(-90deg)" }}
+              size="10px"
+              color="brand"
+            />
+          </LinkBox>
+        </>
       ) : (
         <Box margin={{ vertical: "medium" }}>
           <Heading margin="none" weight="normal" level={3}>
@@ -228,7 +238,12 @@ export const PostView = ({ post }: IProps) => {
       )}
 
       {text && (
-        <StyledMD components={{ p: <Paragraph size="medium" fill /> }}>
+        <StyledMD
+          components={{
+            p: <Paragraph size="medium" fill />,
+            img: <Image fill="horizontal" />,
+          }}
+        >
           {text}
         </StyledMD>
       )}

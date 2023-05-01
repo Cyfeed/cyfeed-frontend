@@ -2,9 +2,9 @@ import {
   Box,
   FormField,
   Heading,
+  MaskedInput,
   Paragraph,
   ResponsiveContext,
-  TextInput,
 } from "grommet";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -89,7 +89,7 @@ export const LoginContainer = () => {
   const handleSendCode = useCallback(async () => {
     if (loginToken && email) {
       const { accessToken, refreshToken, accessTokenExpiresAt } = await login({
-        authCode: code,
+        authCode: code.slice(2),
         email,
         loginToken,
       }).unwrap();
@@ -150,10 +150,10 @@ export const LoginContainer = () => {
             error={loginError && "Ошибка авторизации"}
             width={mobile ? "100%" : undefined}
           >
-            <TextInput
+            <MaskedInput
               disabled={submitCodeDisabled}
-              type="number"
               size="small"
+              mask={[{ fixed: "0x" }, { regexp: /[0-9]*\d[0-9]*/, length: 4 }]}
               placeholder="0x0000"
               value={code}
               onChange={(e) => setCode(e.target.value)}
