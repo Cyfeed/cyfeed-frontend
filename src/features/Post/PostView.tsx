@@ -1,19 +1,11 @@
-import {
-  Box,
-  Button,
-  Heading,
-  Markdown,
-  Paragraph,
-  Text,
-  Layer,
-} from "grommet";
-import { Close } from "grommet-icons";
+import { Box, Heading, Markdown, Paragraph, Text, Layer } from "grommet";
+
 import { useCallback, useState } from "react";
 import styled from "styled-components";
-import { IPostTag, IPostViewItem } from "../../api/types/getFeed";
+import { IPostViewItem } from "../../api/types/getFeed";
 import { IReaction } from "../../api/types/getReactions";
 import { Reaction } from "../../components/Reaction/Reaction";
-import { HACKED_GREY, HACKED_GREEN, UNIT_1 } from "../../theme";
+import { HACKED_GREY, HACKED_GREEN } from "../../theme";
 import { relativeTimeFromDates } from "../../utils/relativeTime";
 import { AddReaction } from "../AddReaction";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -27,6 +19,7 @@ import { useSelector } from "react-redux";
 import { HACKED_DARK_GREY } from "../../theme";
 import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 import { LinkText } from "../../components/LinkText/LinkText";
+import { Tags } from "./Tags";
 
 interface IProps {
   post: IPostViewItem;
@@ -239,6 +232,7 @@ export const PostView = ({ post }: IProps) => {
           {text}
         </StyledMD>
       )}
+
       <Box margin={{ top: "medium" }}>
         <Tags tags={tags} />
       </Box>
@@ -297,56 +291,6 @@ export const PostView = ({ post }: IProps) => {
   );
 };
 
-export const Tags = ({
-  tags,
-  onRemove,
-}: {
-  tags: IPostTag[];
-  onRemove?(id: string): void;
-}) => {
-  if (!tags.length) {
-    return null;
-  }
-
-  return (
-    <TagsBox direction="row" wrap>
-      {tags.map((tag, idx) => (
-        <Tag key={tag.id || idx} tag={tag} onRemove={onRemove} />
-      ))}
-    </TagsBox>
-  );
-};
-
-const Tag = ({
-  tag,
-  onRemove,
-}: {
-  tag: IPostTag;
-  onRemove?(id: string): void;
-}) => {
-  return (
-    <Box
-      width="fit-content"
-      align="center"
-      justify="start"
-      pad={{ vertical: "4px", horizontal: "6px" }}
-      background="background-contrast"
-      direction="row"
-      gap="small"
-      round={UNIT_1}
-    >
-      <Text color="text-weak">{`/${tag.name}`}</Text>
-      {onRemove && (
-        <Button
-          plain
-          icon={<Close size="8px" color="text-weak" />}
-          onClick={() => onRemove(tag.id)}
-        />
-      )}
-    </Box>
-  );
-};
-
 export const LinkBox = styled(Box)`
   cursor: pointer;
   flex-shrink: 0;
@@ -373,10 +317,6 @@ const LabelButton = styled(Box)`
   &:hover {
     background-color: ${HACKED_GREY};
   }
-`;
-
-const TagsBox = styled(Box)`
-  gap: 8px;
 `;
 
 const Reactions = styled(Box)`

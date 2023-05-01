@@ -3,9 +3,10 @@ import { useCallback, useRef, useState } from "react";
 
 import { IGetTagsResponse, ITag } from "../../api/types/getTags";
 import { UNIT_1 } from "../../theme";
-import { Tags } from "../Post/PostView";
+
 import { Set } from "typescript";
 import { IPostTag } from "../../api/types/getFeed";
+import { Tags } from "../Post/Tags";
 
 type Props = {
   tagsSource: IGetTagsResponse;
