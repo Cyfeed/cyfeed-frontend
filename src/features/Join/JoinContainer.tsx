@@ -10,7 +10,7 @@ import {
   TextArea,
   TextInput,
 } from "grommet";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 import { useCreateUserMutation } from "../../api/cyfeedApi";
 import { ICreateUserRequest } from "../../api/types/createUser";
@@ -34,7 +34,7 @@ export const JoinContainer = () => {
   const size = useContext(ResponsiveContext);
   const mobile = size === "xsmall";
   const [value, setValue] = useState(DEFAULT_VALUE);
-  const [createUser, { status }] = useCreateUserMutation();
+  const [createUser, { status, isSuccess }] = useCreateUserMutation();
 
   const handleSubmit = useCallback(
     (userData: ICreateUserRequest) => {
@@ -42,6 +42,24 @@ export const JoinContainer = () => {
     },
     [createUser]
   );
+
+  useEffect(() => {
+    if (isSuccess) {
+      setValue(DEFAULT_VALUE);
+    }
+  }, [isSuccess]);
+
+  if (isSuccess) {
+    return (
+      <Box justify="center" align="center" fill>
+        <Heading level={4}>Добро пожаловать в сообщество</Heading>
+        <Text>
+          Мы получили твой запрос и скоро отправим на почту подтверждение
+          активации твоего аккаунта
+        </Text>
+      </Box>
+    );
+  }
 
   return (
     <Box width={{ max: "698px" }}>
@@ -51,7 +69,7 @@ export const JoinContainer = () => {
       </Heading>
       <Form
         value={value}
-        onChange={(nextValue, { touched }) => {
+        onChange={(nextValue) => {
           setValue(nextValue);
         }}
         onReset={() => setValue(DEFAULT_VALUE)}
