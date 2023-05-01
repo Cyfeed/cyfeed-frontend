@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { IPostViewItem } from "../../api/types/getFeed";
 import { IReaction } from "../../api/types/getReactions";
 import { Reaction } from "../../components/Reaction/Reaction";
-import { HACKED_GREY, HACKED_GREEN } from "../../theme";
+import { HACKED_GREY, HACKED_GREEN, HACKED_DARK_WHITE } from "../../theme";
 import { relativeTimeFromDates } from "../../utils/relativeTime";
 import { AddReaction } from "../AddReaction";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -261,34 +261,34 @@ export const PostView = ({ post }: IProps) => {
           onEsc={onClose}
           background="background-contrast"
         >
-          <Box pad="medium" gap="small" width="medium">
-            <Heading level={3} margin="none">
-              Удалить пост
-            </Heading>
-            <Text>Вы точно хотите удалить пост?</Text>
-            {isError && <Text color="status-error">Не получилось удалить</Text>}
+          <Box gap="small" width="medium" round="8px">
+            <Box
+              background="black"
+              pad={{ horizontal: "16px", vertical: "8px" }}
+              border={{ side: "bottom", size: "1px", color: HACKED_DARK_WHITE }}
+            >
+              <Heading level={5} margin="none">
+                Удалить пост
+              </Heading>
+            </Box>
+            <Box pad={{ horizontal: "16px", vertical: "8px" }}>
+              <Text>Вы уверены, что хотите удалить этот материал?</Text>
+              {isError && (
+                <Text color="status-error">Не получилось удалить</Text>
+              )}
+            </Box>
             <Box
               as="footer"
               gap="small"
               direction="row"
               align="center"
-              justify="end"
-              pad={{ top: "medium", bottom: "small" }}
+              justify="start"
+              pad={{ horizontal: "16px", vertical: "8px", bottom: "20px" }}
             >
               <CyButton
                 label={
-                  <Text size="small" color="white">
-                    Отменить
-                  </Text>
-                }
-                onClick={onClose}
-                color="dark-3"
-                size="small"
-              />
-              <CyButton
-                label={
                   <Text size="small" color="black">
-                    Удалить
+                    Да
                   </Text>
                 }
                 loading={isLoading}
@@ -297,6 +297,16 @@ export const PostView = ({ post }: IProps) => {
                 onClick={handleDeletePost}
                 theme={EButtonTheme.White}
                 primary
+              />
+              <CyButton
+                label={
+                  <Text size="small" color="white">
+                    Нет
+                  </Text>
+                }
+                onClick={onClose}
+                color="dark-3"
+                size="small"
               />
             </Box>
           </Box>
