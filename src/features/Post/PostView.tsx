@@ -21,6 +21,7 @@ import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 import { LinkText } from "../../components/LinkText/LinkText";
 import { Tags } from "./Tags";
 import { BottomCorner } from "grommet-icons";
+import { isError } from "lodash-es";
 
 interface IProps {
   post: IPostViewItem;
@@ -241,7 +242,7 @@ export const PostView = ({ post }: IProps) => {
         <StyledMD
           components={{
             p: <Paragraph size="medium" fill />,
-            img: <Image fill="horizontal" />,
+            img: <Image fit="cover" style={{ maxWidth: "100%" }} />,
           }}
         >
           {text}
