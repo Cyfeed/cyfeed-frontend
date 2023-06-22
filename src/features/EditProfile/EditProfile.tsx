@@ -61,7 +61,7 @@ export const EditProfile = ({ profile }: IProps) => {
     { isLoading: isUpdateUserLoading, isError: isUpdateUserError },
   ] = useUpdateUserMutation();
   const [
-    updateIntro,
+    updateUserIntro,
     { isLoading: isUpdateIntroLoading, isError: isUpdateIntroError },
   ] = useUpdateUserIntroMutation();
   const initialValues = getFormValues(profile);
@@ -79,20 +79,26 @@ export const EditProfile = ({ profile }: IProps) => {
       ];
 
       const reqUser: IUpdateUserRequest = {
-        networks: networks.filter((n) => Boolean(n.link)),
-        work: value.work,
-        position: value.position,
+        userData: {
+          networks: networks.filter((n) => Boolean(n.link)),
+          work: value.work,
+          position: value.position,
+        },
+        userId: "me",
       };
 
       if (profile.introduction !== value.introduction) {
-        await updateIntro({ introduction: value.introduction });
+        await updateUserIntro({
+          introduction: value.introduction,
+          userId: "me",
+        });
       }
 
       const user = await updateUser(reqUser).unwrap();
 
       dispatch(setUser({ user }));
     },
-    [dispatch, profile.introduction, updateIntro, updateUser]
+    [dispatch, profile.introduction, updateUserIntro, updateUser]
   );
 
   return (

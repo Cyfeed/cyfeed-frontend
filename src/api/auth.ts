@@ -29,8 +29,8 @@ export const authApi = (
     }),
   }),
   updateUser: builder.mutation<IUpdateUserResponse, IUpdateUserRequest>({
-    query: (userData) => ({
-      url: `auth/users`,
+    query: ({ userData, userId }) => ({
+      url: `auth/users/${userId}`,
       method: "PUT",
       body: userData,
     }),
@@ -39,8 +39,8 @@ export const authApi = (
     IUpdateUserIntroResponse,
     IUpdateUserIntroRequest
   >({
-    query: ({ introduction }) => ({
-      url: `/auth/users/intro`,
+    query: ({ introduction, userId }) => ({
+      url: `/auth/users/intro/${userId}`,
       method: "PUT",
       body: { introduction },
     }),
