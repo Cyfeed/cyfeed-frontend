@@ -40,7 +40,7 @@ export const authApi = (
     IUpdateUserIntroRequest
   >({
     query: ({ introduction, userId }) => ({
-      url: `/auth/users/intro/${userId}`,
+      url: `/auth/users/${userId}/intro`,
       method: "PUT",
       body: { introduction },
     }),
