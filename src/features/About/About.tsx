@@ -1,11 +1,4 @@
-import {
-  Anchor,
-  Box,
-  Heading,
-  Paragraph,
-  ResponsiveContext,
-  Text,
-} from "grommet";
+import { Box, Heading, Paragraph, ResponsiveContext, Text } from "grommet";
 import { HACKED_GREEN, LANDING_BACKGROUND } from "../../theme";
 import React, { useContext } from "react";
 
