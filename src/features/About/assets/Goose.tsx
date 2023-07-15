@@ -1,9 +1,9 @@
-export const Goose = () => {
+export const Goose = ({ width = 73 }: { width?: number }) => {
   return (
     <svg
-      width="73"
-      height="73"
-      viewBox="0 0 73 73"
+      width={width}
+      height={width}
+      viewBox={`0 0 ${width} ${width}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >

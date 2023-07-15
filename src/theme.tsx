@@ -24,6 +24,12 @@ export const UNIT_9 = "48px";
 
 export const theme: ThemeType = {
   global: {
+    focus: {
+      outline: {
+        // color: "transparent",
+        size: "1px",
+      },
+    },
     input: { font: { weight: "normal", size: "16px" } },
     breakpoints: {
       xsmall: {
@@ -33,6 +39,7 @@ export const theme: ThemeType = {
     edgeSize: { xlarge: "124px" },
     font: {
       family: "IBM Plex Mono",
+      size: "16px",
     },
     colors: {
       active: HACKED_GREY,
@@ -99,6 +106,16 @@ export const theme: ThemeType = {
       border: {
         radius: UNIT_1,
       },
+    },
+  },
+  paragraph: {
+    medium: {
+      size: "16px",
+    },
+  },
+  text: {
+    medium: {
+      size: "16px",
     },
   },
   button: {

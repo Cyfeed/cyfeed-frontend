@@ -27,7 +27,7 @@ export const ValuesDisclaimer = () => {
   return <StyledMD>{CONTENT}</StyledMD>;
 };
 
-const StyledMD = styled(Markdown)`
+export const StyledMD = styled(Markdown)`
   & > * {
     font-size: 14px;
   }

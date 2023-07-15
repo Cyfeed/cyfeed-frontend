@@ -1,4 +1,4 @@
-enum ENetworkType {
+export enum ENetworkType {
   LinkedIn = "linkedin",
   Twitter = "twitter",
   Telegram = "telegram",
@@ -23,7 +23,7 @@ export interface ICreateUserRequest {
   work: string;
 }
 
-export interface ICreateUserResponse {
+export interface IUser {
   details: {
     joinedAt: string;
     networks: [
@@ -43,3 +43,5 @@ export interface ICreateUserResponse {
   status: EStatus;
   username: string;
 }
+
+export interface ICreateUserResponse extends IUser {}

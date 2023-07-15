@@ -2,9 +2,9 @@ import {
   Box,
   FormField,
   Heading,
+  MaskedInput,
   Paragraph,
   ResponsiveContext,
-  TextInput,
 } from "grommet";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +17,7 @@ import {
 import { CyButton, EButtonTheme } from "../../components/Button/CyButton";
 import {
   ACCESS_TOKEN,
+  ACCESS_TOKEN_EXPIRES_AT,
   LOGIN_EMAIL,
   LOGIN_TOKEN,
   REFRESH_TOKEN,
@@ -51,6 +52,10 @@ export const LoginContainer = () => {
   const [email, setEmail] = useLocalStorage(LOGIN_EMAIL, "");
   const [, setAccessToken] = useLocalStorage(ACCESS_TOKEN, "");
   const [, setRefreshToken] = useLocalStorage(REFRESH_TOKEN, "");
+  const [, setAccessTokenExpiresAt] = useLocalStorage(
+    ACCESS_TOKEN_EXPIRES_AT,
+    ""
+  );
 
   const emailErrorMessage =
     // @ts-expect-error TODO: типизировать ошибки
@@ -83,8 +88,8 @@ export const LoginContainer = () => {
 
   const handleSendCode = useCallback(async () => {
     if (loginToken && email) {
-      const { accessToken, refreshToken } = await login({
-        authCode: code,
+      const { accessToken, refreshToken, accessTokenExpiresAt } = await login({
+        authCode: code.slice(2),
         email,
         loginToken,
       }).unwrap();
@@ -93,7 +98,10 @@ export const LoginContainer = () => {
 
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);
-      dispatch(setCredentials({ accessToken, refreshToken }));
+      setAccessTokenExpiresAt(accessTokenExpiresAt);
+      dispatch(
+        setCredentials({ accessToken, refreshToken, accessTokenExpiresAt })
+      );
 
       const userData = await me().unwrap();
       dispatch(setUser({ user: userData }));
@@ -106,6 +114,7 @@ export const LoginContainer = () => {
     loginToken,
     me,
     setAccessToken,
+    setAccessTokenExpiresAt,
     setRefreshToken,
   ]);
 
@@ -141,10 +150,10 @@ export const LoginContainer = () => {
             error={loginError && "Ошибка авторизации"}
             width={mobile ? "100%" : undefined}
           >
-            <TextInput
+            <MaskedInput
               disabled={submitCodeDisabled}
-              type="number"
               size="small"
+              mask={[{ fixed: "0x" }, { regexp: /[0-9]*\d[0-9]*/, length: 4 }]}
               placeholder="0x0000"
               value={code}
               onChange={(e) => setCode(e.target.value)}

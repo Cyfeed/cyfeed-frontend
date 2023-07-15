@@ -1,48 +1,82 @@
-import { Box, Image, Text } from "grommet";
+import { Box, Text } from "grommet";
 
 import { IPost } from "../../api/types/getFeed";
 import { UNIT_1 } from "../../theme";
 // @ts-ignore TODO: установить типы
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { relativeTimeFromDates } from "../../utils/relativeTime";
+import { LinkText } from "../LinkText/LinkText";
+import { Reaction } from "../Reaction/Reaction";
+import { BottomCorner } from "grommet-icons";
+
+import { LinkBox } from "../../features/Post/PostView";
 
 interface IFeedItemProps {
   post: IPost;
 }
 
-const reactionsMock = [
-  { count: 100, src: "asld1" },
-  { count: 3, src: "asld2" },
-  { count: 3, src: "asld3" },
-  { count: 3, src: "asld4" },
-  { count: 3, src: "asld5" },
-];
-
 export const FeedItem = ({ post }: IFeedItemProps) => {
-  const { title, publishedAt, author } = post;
-  const displayDate = new Date(publishedAt).toLocaleDateString("ru-RU", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  const { title, publishedAt, author, id, link } = post;
+  const navigate = useNavigate();
+
+  const handleTitleClick = useCallback(() => {
+    navigate(`/post/${id}`);
+  }, [id, navigate]);
+  const handleAuthorClick = useCallback(() => {
+    navigate(`/profile/${author}`);
+  }, [author, navigate]);
+
+  const displayDate = relativeTimeFromDates(new Date(publishedAt));
+
+  const goTo = useCallback((url: string) => {
+    window.open(url, "_blank");
+  }, []);
 
   return (
-    <Box pad="medium" gap="small">
-      <Text size="small">{title}</Text>
-      <Box direction="row" gap="medium">
+    <Box
+      round="4px"
+      margin={{ vertical: "6px" }}
+      pad={{ vertical: "small", horizontal: "medium" }}
+      gap="6px"
+      background="#16171D"
+    >
+      <Title onClick={handleTitleClick} size="medium" weight={500}>
+        {title}
+      </Title>
+      {link && (
+        <LinkBox
+          focusIndicator={false}
+          onClick={() => goTo(link)}
+          direction="row"
+          gap="2px"
+        >
+          <Text color="text-xweak" size="xsmall">
+            {new URL(link).host}
+          </Text>
+          <BottomCorner
+            style={{ transform: "rotate(-90deg)" }}
+            size="10px"
+            color="brand"
+          />
+        </LinkBox>
+      )}
+      <Box direction="row" gap="small">
         <Text size="xsmall" color="text-xweak">
           {displayDate}
         </Text>
-        <Text size="xsmall" color="text-xweak">
-          {author}
+        <Text color="text-xweak" size="small">
+          &#8227;
         </Text>
+        <LinkText onClick={handleAuthorClick} size="xsmall" color="text-xweak">
+          {author}
+        </LinkText>
       </Box>
+
       <ReactionsBox direction="row" margin={{ top: "xsmall" }} wrap>
-        {reactionsMock.map((reaction) => (
-          <Reaction
-            key={reaction.src}
-            count={reaction.count}
-            src={reaction.src}
-          />
+        {post.reactions?.map((reaction) => (
+          <Reaction postView={false} key={reaction.id} reaction={reaction} />
         ))}
         <Box
           width="fit-content"
@@ -55,7 +89,7 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
           round={UNIT_1}
         >
           <Text color="text-weak" size="xsmall">
-            12 Comments
+            {`Ответов: ${post.commentsCount ? post.commentsCount : 0}`}
           </Text>
         </Box>
       </ReactionsBox>
@@ -63,33 +97,10 @@ export const FeedItem = ({ post }: IFeedItemProps) => {
   );
 };
 
-interface IReactionProps {
-  count: number;
-  src: string;
-}
-
-const Reaction = ({ count, src }: IReactionProps) => {
-  return (
-    <Box
-      width="fit-content"
-      align="center"
-      justify="start"
-      pad={{ vertical: "4px", horizontal: "6px" }}
-      background="background-contrast"
-      direction="row"
-      gap="small"
-      round={UNIT_1}
-    >
-      <Box width="12px" height="12px">
-        <Image width="12px" src={src} fit="contain" />
-      </Box>
-      <Text color="text-weak" size="xsmall">
-        {count}
-      </Text>
-    </Box>
-  );
-};
-
 const ReactionsBox = styled(Box)`
   gap: ${UNIT_1};
+`;
+
+const Title = styled(Text)`
+  cursor: pointer;
 `;

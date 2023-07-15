@@ -1,63 +1,48 @@
-import {
-  Box,
-  Button,
-  Header,
-  Menu,
-  Nav,
-  ResponsiveContext,
-  Text,
-} from "grommet";
+import { Header, ResponsiveContext } from "grommet";
+import styled from "styled-components";
 
-import { selectCurrentUser } from "../Login/authSlice";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import { cyfeedApi } from "../../api/cyfeedApi";
+import { logout, selectCurrentUser } from "../Login/authSlice";
+import { HeaderDesktop } from "./HeaderDesktop";
+import { HeaderMobile } from "./HeaderMobile";
+import { useCallback } from "react";
 
 export const Navbar = () => {
+  const dispatch = useDispatch();
+  const user = useSelector(selectCurrentUser);
+  const { isFetching: userIsFetching } = cyfeedApi.endpoints.me.useQueryState();
   const navigate = useNavigate();
-  const currentUser = useSelector(selectCurrentUser);
+
+  const handleLogout = useCallback(() => {
+    dispatch(logout());
+    navigate("/login", { replace: true });
+  }, [dispatch, navigate]);
 
   return (
     <Header pad="medium">
       <ResponsiveContext.Consumer>
         {(responsive) =>
-          responsive === "xsmall" ? (
-            <Menu
-              label="Menu"
-              items={[
-                { label: "This is", onClick: () => {} },
-                { label: "The Menu", onClick: () => {} },
-                { label: "Component", onClick: () => {} },
-              ]}
+          responsive === "small" || responsive === "xsmall" ? (
+            <HeaderMobile
+              onLogout={handleLogout}
+              user={user}
+              userIsFetching={userIsFetching}
             />
           ) : (
-            <Nav fill="horizontal" direction="row" justify="between">
-              <Box direction="row" gap="small">
-                <Button plain onClick={() => navigate("/")} label="Главная" />
-                <Button plain onClick={() => navigate("feed")} label="Лента" />
-                <Button
-                  plain
-                  onClick={() => navigate("new-post")}
-                  label="Создать"
-                />
-              </Box>
-              <Box direction="row" gap="small">
-                {currentUser ? (
-                  <Text>{currentUser.username}</Text>
-                ) : (
-                  <>
-                    <Button
-                      plain
-                      onClick={() => navigate("login")}
-                      label="Войти"
-                    />
-                    <Button plain onClick={() => navigate("join")} />
-                  </>
-                )}
-              </Box>
-            </Nav>
+            <HeaderDesktop
+              onLogout={handleLogout}
+              user={user}
+              userIsFetching={userIsFetching}
+            />
           )
         }
       </ResponsiveContext.Consumer>
     </Header>
   );
 };
+
+export const CustomNavLink = styled(NavLink)`
+  text-decoration: none;
+`;

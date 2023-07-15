@@ -1,28 +1,37 @@
+import { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   selectAccessToken,
   selectCurrentUser,
+  selectRefreshToken,
   setUser,
 } from "./../features/Login/authSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo } from "react";
 
 import { useLazyMeQuery } from "../api/cyfeedApi";
 
 export const useAuth = () => {
-  const user = useSelector(selectCurrentUser);
-  const token = useSelector(selectAccessToken);
   const dispatch = useDispatch();
-  const [me, { data }] = useLazyMeQuery();
+
+  const user = useSelector(selectCurrentUser);
+  const accessToken = useSelector(selectAccessToken);
+  const refreshToken = useSelector(selectRefreshToken);
+
+  const [getMe, { isFetching: userIsFetching }] = useLazyMeQuery();
+
+  const getUser = useCallback(async () => {
+    const me = await getMe().unwrap();
+    dispatch(setUser({ user: me }));
+  }, [dispatch, getMe]);
 
   useEffect(() => {
-    if (!user && token) {
-      me();
+    if (!user && (accessToken || refreshToken)) {
+      getUser();
     }
+  }, [accessToken, getUser, refreshToken, user]);
 
-    if (data) {
-      dispatch(setUser({ user: data }));
-    }
-  }, [data, dispatch, me, token, user]);
-
-  return useMemo(() => ({ user: user || data }), [user, data]);
+  return {
+    user,
+    userIsFetching,
+    accessToken,
+  };
 };

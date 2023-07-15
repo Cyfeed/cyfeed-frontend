@@ -1,98 +1,26 @@
-import { ICreatePostRequest, ICreatePostResponse } from "./types/createPost";
-import { ICreateUserRequest, ICreateUserResponse } from "./types/createUser";
-import { IGetAuthCodeRequest, IGetAuthCodeResponse } from "./types/getAuthCode";
-import { IGetFeedRequest, IGetFeedResponse, IPost } from "./types/getFeed";
-import { ILoginRequest, ILoginResponse } from "./types/login";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { communicationApi } from "./communication";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
-import { IGetUserByIdResponse } from "./types/getUserById";
-import { ISignInToWaitingListRequest } from "./types/signToWaitingList";
-import { RootState } from "../store";
+import { baseQueryWithReauth } from "./baseQuery";
+import { postApi } from "./post";
+import { commentsApi } from "./comments";
+import { tagsApi } from "./tags";
+import { authApi } from "./auth";
+import { feedApi } from "./feed";
+import { reactionsApi } from "./reactions";
 
 export const cyfeedApi = createApi({
   reducerPath: "cyfeedApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://api.cyfeed.co/api/",
-    prepareHeaders: (headers, { getState, endpoint }) => {
-      const token = (getState() as RootState).auth.accessToken;
-      if (token && endpoint !== "refreshToken") {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
-
+  baseQuery: baseQueryWithReauth,
+  tagTypes: ["Post", "Posts"],
   endpoints: (builder) => ({
-    /**
-     * AUTH
-     * */
-    createUser: builder.mutation<ICreateUserResponse, ICreateUserRequest>({
-      query: (userData) => ({
-        url: `auth/users`,
-        method: "POST",
-        body: userData,
-      }),
-    }),
-    getLoginCode: builder.mutation<IGetAuthCodeResponse, IGetAuthCodeRequest>({
-      query: ({ email }) => ({
-        url: "/auth/users/code",
-        method: "POST",
-        body: { email },
-      }),
-    }),
-    login: builder.mutation<ILoginResponse, ILoginRequest>({
-      query: (loginData) => ({
-        url: "/auth/users/login",
-        method: "POST",
-        body: loginData,
-      }),
-    }),
-    refreshToken: builder.mutation<ILoginResponse, string>({
-      query: (refreshToken) => ({
-        url: "/auth/token/refresh",
-        method: "POST",
-        headers: {
-          authorization: `Bearer ${refreshToken}`,
-        },
-      }),
-    }),
-    me: builder.query<IGetUserByIdResponse, void>({
-      query: () => ({
-        url: "/auth/users/id/me",
-        method: "GET",
-      }),
-    }),
-    /**
-     * Communication
-     */
-
-    signToWaitingList: builder.mutation<void, ISignInToWaitingListRequest>({
-      query: (email) => ({
-        url: "/communication/email",
-        method: "POST",
-        body: email,
-      }),
-    }),
-
-    /**
-     * CONTENT
-     */
-    getFeed: builder.query<IPost[], IGetFeedRequest>({
-      query: ({ type, index = 0, size = 10 }) => ({
-        url: `/content/feed?type=${type}&index=${index}&size=${size}`,
-        method: "GET",
-      }),
-      transformResponse: (response: IGetFeedResponse, meta, arg) => {
-        return response.posts;
-      },
-    }),
-    createPost: builder.mutation<ICreatePostResponse, ICreatePostRequest>({
-      query: (post) => ({
-        url: `/content/posts`,
-        method: "POST",
-        body: post,
-      }),
-    }),
+    ...authApi(builder),
+    ...communicationApi(builder),
+    ...feedApi(builder),
+    ...postApi(builder),
+    ...commentsApi(builder),
+    ...tagsApi(builder),
+    ...reactionsApi(builder),
   }),
 });
 
@@ -104,6 +32,19 @@ export const {
   useLazyMeQuery,
   useMeQuery,
   useCreatePostMutation,
-  useRefreshTokenMutation,
+  useGetPostQuery,
+  useGetPostCommentsQuery,
+  useLazyGetPostCommentsQuery,
   useSignToWaitingListMutation,
+  useLazySendPostCommentQuery,
+  useTagsQuery,
+  useGetReactionsQuery,
+  usePutReactionMutation,
+  useUpdateUserMutation,
+  useUpdateUserIntroMutation,
+  useGetUserByIdQuery,
+  useGetUserByUsernameQuery,
+  useRemoveReactionMutation,
+  useDeletePostMutation,
+  useEditPostMutation,
 } = cyfeedApi;
