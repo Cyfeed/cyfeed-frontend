@@ -26,7 +26,7 @@ export function PrivateOutlet() {
   }
 
   if (!user && !accessToken && !refreshToken) {
-    return <Navigate to="/login" state={{ from: location }} />;
+    return <Navigate to="/about" state={{ from: location }} />;
   }
 
   return null;
